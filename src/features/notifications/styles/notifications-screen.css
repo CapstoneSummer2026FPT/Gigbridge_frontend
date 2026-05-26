@@ -3,34 +3,34 @@
  */
 
 .notifications-desc {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .notifications-tab-active {
-  background: rgba(0, 240, 255, 0.1);
-  border: 1px solid rgba(0, 240, 255, 0.3);
-  color: #00F0FF;
+  background: rgba(0, 119, 255, 0.1);
+  border: 1px solid rgba(0, 119, 255, 0.3);
+  color: var(--gb-cyan);
 }
 
 .notifications-tab-inactive {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: #8892A4;
+  background: var(--gb-glass-bg);
+  border: 1px solid var(--gb-border);
+  color: var(--gb-text-secondary);
 }
 
 .notifications-card-unread {
-  background: rgba(0, 240, 255, 0.04);
-  border: 1px solid rgba(0, 240, 255, 0.15);
+  background: rgba(0, 119, 255, 0.04);
+  border: 1px solid rgba(0, 119, 255, 0.15);
 }
 
 .notifications-card-read {
   background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--gb-border);
 }
 
 .notifications-icon-bg-cyan {
-  background: rgba(0, 240, 255, 0.12);
-  border: 1px solid rgba(0, 240, 255, 0.3);
+  background: rgba(0, 119, 255, 0.12);
+  border: 1px solid rgba(0, 119, 255, 0.3);
 }
 
 .notifications-icon-bg-purple {
@@ -49,33 +49,33 @@
 }
 
 .notifications-icon-cyan {
-  color: #00F0FF;
+  color: var(--gb-cyan);
 }
 
 .notifications-icon-purple {
-  color: #9F4BFF;
+  color: var(--gb-purple);
 }
 
 .notifications-icon-green {
-  color: #22C55E;
+  color: var(--gb-green);
 }
 
 .notifications-icon-amber {
-  color: #F59E0B;
+  color: var(--gb-amber);
 }
 
 .notifications-time {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .notifications-message {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .notifications-unread-dot {
-  background: #00F0FF;
+  background: #0077FF;
 }
 
 .notifications-empty-state {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }

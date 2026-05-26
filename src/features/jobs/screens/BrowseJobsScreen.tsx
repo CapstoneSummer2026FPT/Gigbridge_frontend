@@ -57,7 +57,7 @@ export default function BrowseJobsScreen() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-3xl font-black text-white mb-2">Browse Jobs</h1>
+          <h1 className="text-3xl font-black text-primary mb-2">Browse Jobs</h1>
           <p className="browse-jobs-desc">Discover opportunities matched to your expertise</p>
         </div>
 
@@ -93,7 +93,7 @@ export default function BrowseJobsScreen() {
             <div className="mt-4 pt-4 border-t browse-jobs-divider">
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="text-xs font-medium text-white mb-2 block">Experience Level</label>
+                  <label className="text-xs font-medium text-primary mb-2 block">Experience Level</label>
                   <div className="flex flex-wrap gap-1">
                     {EXPERIENCE.map(e => (
                       <button key={e} onClick={() => setExperience(e)}
@@ -104,7 +104,7 @@ export default function BrowseJobsScreen() {
                   </div>
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-white mb-2 block">Budget Range</label>
+                  <label className="text-xs font-medium text-primary mb-2 block">Budget Range</label>
                   <div className="flex flex-wrap gap-1">
                     {BUDGET_RANGES.map(b => (
                       <button key={b} onClick={() => setBudget(b)}
@@ -132,12 +132,12 @@ export default function BrowseJobsScreen() {
         {/* Results Count */}
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm browse-jobs-desc">
-            <span className="text-white font-semibold">{jobs.length}</span> jobs found
+            <span className="text-primary font-semibold">{jobs.length}</span> jobs found
             {aiOnly && <span className="browse-jobs-ai-toggle-active"> · AI Recommended</span>}
           </p>
           <div className="flex items-center gap-2">
             <span className="text-xs browse-jobs-desc">Sort by:</span>
-            <button className="flex items-center gap-1 text-sm text-white">
+            <button className="flex items-center gap-1 text-sm text-primary">
               Best Match <ChevronDown size={14} />
             </button>
           </div>
@@ -153,7 +153,7 @@ export default function BrowseJobsScreen() {
               <div className="flex flex-col md:flex-row md:items-start gap-4">
                 <div className="flex-1">
                   <div className="flex items-start gap-2 flex-wrap mb-2">
-                    <h2 className="text-white font-semibold group-hover:text-[#00F0FF] transition-colors">
+                    <h2 className="text-primary font-semibold group-hover:text-[#0077FF] transition-colors">
                       {job.title}
                     </h2>
                     {job.isAiRecommended && <span className="badge-purple text-xs flex-shrink-0">⚡ AI Pick</span>}
@@ -198,7 +198,7 @@ export default function BrowseJobsScreen() {
                     onClick={e => { e.stopPropagation(); toggleSave(job.id); }}
                     className={`p-2 rounded-lg transition-all ${saved.includes(job.id) ? 'browse-jobs-save-icon-active' : 'browse-jobs-save-icon'}`}
                     style={{ background: saved.includes(job.id) ? 'rgba(0,240,255,0.1)' : 'transparent' }}>
-                    <Bookmark size={16} fill={saved.includes(job.id) ? '#00F0FF' : 'none'} />
+                    <Bookmark size={16} fill={saved.includes(job.id) ? '#0077FF' : 'none'} />
                   </button>
                   <button
                     onClick={e => { e.stopPropagation(); navigate(`/jobs/${job.id}`); }}
@@ -214,7 +214,7 @@ export default function BrowseJobsScreen() {
         {jobs.length === 0 && (
           <div className="text-center py-20">
             <Bot size={48} className="mx-auto mb-4 opacity-30 browse-jobs-job-meta" />
-            <p className="text-white font-semibold mb-2">No jobs found</p>
+            <p className="text-primary font-semibold mb-2">No jobs found</p>
             <p className="text-sm browse-jobs-desc">Try adjusting your filters or search terms</p>
           </div>
         )}

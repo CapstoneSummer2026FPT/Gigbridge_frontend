@@ -1,14 +1,17 @@
 import { useState } from 'react';
-import { User, Lock, CreditCard, Bell, Bot, Camera, Plus, X, Eye, EyeOff } from 'lucide-react';
+import { User, Lock, CreditCard, Bell, Bot, Camera, Plus, X, Eye, EyeOff, Globe } from 'lucide-react';
 import { AppLayout } from '../../../shared/components/AppLayout';
 import { useApp } from '../../../app/providers/AppProvider';
 import { DB } from '../../../mock_backend';
 import { SEED_FREELANCER_PROFILES } from '../../../mock_backend/database/seed';
+import { LanguageSwitcher } from '../../../shared/components/LanguageSwitcher';
+import { useTranslation } from '../../../hooks/useTranslation';
 
-type SettingsTab = 'profile' | 'security' | 'payment' | 'notifications' | 'ai';
+type SettingsTab = 'profile' | 'security' | 'payment' | 'notifications' | 'ai' | 'preferences';
 
 export default function SettingsScreen() {
   const { user, role } = useApp();
+  const { t } = useTranslation();
   const [tab, setTab] = useState<SettingsTab>('profile');
   const [showPassword, setShowPassword] = useState(false);
   const [isOptimizing, setIsOptimizing] = useState(false);
@@ -47,10 +50,11 @@ export default function SettingsScreen() {
   };
 
   const TABS = [
-    { id: 'profile', label: 'Profile', icon: <User size={16} /> },
-    { id: 'security', label: 'Security', icon: <Lock size={16} /> },
+    { id: 'profile', label: t('settings.general'), icon: <User size={16} /> },
+    { id: 'security', label: t('settings.security'), icon: <Lock size={16} /> },
     { id: 'payment', label: 'Payment', icon: <CreditCard size={16} /> },
-    { id: 'notifications', label: 'Notifications', icon: <Bell size={16} /> },
+    { id: 'notifications', label: t('settings.notifications'), icon: <Bell size={16} /> },
+    { id: 'preferences', label: 'Preferences', icon: <Globe size={16} /> },
     { id: 'ai', label: 'AI Settings', icon: <Bot size={16} /> },
   ];
 
@@ -58,8 +62,8 @@ export default function SettingsScreen() {
     <AppLayout>
       <div className="max-w-5xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-black text-white mb-1">Settings</h1>
-          <p style={{ color: '#8892A4' }}>Manage your account preferences and profile</p>
+          <h1 className="text-3xl font-black text-primary mb-1">Settings</h1>
+          <p className="text-secondary">Manage your account preferences and profile</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -82,18 +86,18 @@ export default function SettingsScreen() {
               <>
                 {/* Avatar */}
                 <div className="glass-card p-6">
-                  <h2 className="text-white font-semibold mb-5">Profile Photo</h2>
+                  <h2 className="text-primary font-semibold mb-5">Profile Photo</h2>
                   <div className="flex items-center gap-5">
                     <div className="relative">
                       <img src={user?.avatar} alt={user?.name} className="w-20 h-20 rounded-2xl avatar-glow" />
                       <button className="absolute -bottom-2 -right-2 w-8 h-8 rounded-lg flex items-center justify-center"
-                        style={{ background: 'linear-gradient(135deg, #00F0FF, #9F4BFF)' }}>
+                        style={{ background: 'linear-gradient(135deg, #0077FF, #9F4BFF)' }}>
                         <Camera size={14} style={{ color: '#0A0F1C' }} />
                       </button>
                     </div>
                     <div>
-                      <p className="text-white font-medium">{user?.name}</p>
-                      <p className="text-sm mt-0.5 capitalize" style={{ color: '#8892A4' }}>{role} · {user?.email}</p>
+                      <p className="text-primary font-medium">{user?.name}</p>
+                      <p className="text-sm mt-0.5 capitalize text-secondary">{role} · {user?.email}</p>
                       {user?.isVerified && (
                         <span className="badge-green text-xs mt-2 inline-block">✓ Verified</span>
                       )}
@@ -103,7 +107,7 @@ export default function SettingsScreen() {
 
                 {/* Basic Info */}
                 <div className="glass-card p-6">
-                  <h2 className="text-white font-semibold mb-5">Basic Information</h2>
+                  <h2 className="text-primary font-semibold mb-5">Basic Information</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[
                       { label: 'Full Name', key: 'name', type: 'text' },
@@ -115,7 +119,7 @@ export default function SettingsScreen() {
                       ] : []),
                     ].map(field => (
                       <div key={field.key}>
-                        <label className="text-xs font-medium text-white mb-2 block">{field.label}</label>
+                        <label className="text-xs font-medium text-primary mb-2 block">{field.label}</label>
                         <input type={field.type} value={(formData as any)[field.key]}
                           onChange={e => setFormData(prev => ({ ...prev, [field.key]: e.target.value }))}
                           className="input-gb w-full px-4 py-3 text-sm" />
@@ -128,12 +132,12 @@ export default function SettingsScreen() {
                 {role === 'freelancer' && (
                   <div className="glass-card p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-white font-semibold">Professional Bio</h2>
+                      <h2 className="text-primary font-semibold">Professional Bio</h2>
                       <button onClick={handleAIOptimize} disabled={isOptimizing}
                         className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-all disabled:opacity-50"
-                        style={{ background: 'linear-gradient(135deg, rgba(0,240,255,0.15), rgba(159,75,255,0.15))', border: '1px solid rgba(0,240,255,0.3)', color: '#00F0FF' }}>
+                        style={{ background: 'linear-gradient(135deg, rgba(0,240,255,0.15), rgba(159,75,255,0.15))', border: '1px solid rgba(0,240,255,0.3)', color: '#0077FF' }}>
                         {isOptimizing ? (
-                          <><div className="w-3 h-3 rounded-full border border-[#00F0FF] border-t-transparent animate-spin" />Optimizing...</>
+                          <><div className="w-3 h-3 rounded-full border border-[#0077FF] border-t-transparent animate-spin" />Optimizing...</>
                         ) : optimizeSuccess ? (
                           '✓ Bio Optimized!'
                         ) : (
@@ -144,7 +148,7 @@ export default function SettingsScreen() {
                     <textarea value={formData.bio}
                       onChange={e => setFormData(prev => ({ ...prev, bio: e.target.value }))}
                       rows={5} className="input-gb w-full px-4 py-3 resize-none text-sm leading-relaxed" />
-                    <p className="text-xs mt-2" style={{ color: '#8892A4' }}>
+                    <p className="text-xs mt-2 text-secondary">
                       {formData.bio.length} / 1000 characters · AI-optimized bios get 67% more profile views
                     </p>
                   </div>
@@ -160,16 +164,16 @@ export default function SettingsScreen() {
             {/* Security Tab */}
             {tab === 'security' && (
               <div className="glass-card p-6">
-                <h2 className="text-white font-semibold mb-6">Password & Security</h2>
+                <h2 className="text-primary font-semibold mb-6">Password & Security</h2>
                 <div className="space-y-4">
                   {['Current Password', 'New Password', 'Confirm New Password'].map(label => (
                     <div key={label}>
-                      <label className="text-xs font-medium text-white mb-2 block">{label}</label>
+                      <label className="text-xs font-medium text-primary mb-2 block">{label}</label>
                       <div className="relative">
                         <input type={showPassword ? 'text' : 'password'} placeholder="••••••••"
                           className="input-gb w-full px-4 py-3 pr-11 text-sm" />
                         <button onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: '#8892A4' }}>
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary">
                           {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                         </button>
                       </div>
@@ -179,12 +183,12 @@ export default function SettingsScreen() {
                 </div>
 
                 <div className="mt-8 pt-6 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                  <h3 className="text-white font-semibold mb-4">Two-Factor Authentication</h3>
+                  <h3 className="text-primary font-semibold mb-4">Two-Factor Authentication</h3>
                   <div className="flex items-center justify-between p-4 rounded-xl"
                     style={{ background: 'rgba(34,197,94,0.06)', border: '1px solid rgba(34,197,94,0.2)' }}>
                     <div>
-                      <p className="text-white font-medium text-sm">Authenticator App</p>
-                      <p className="text-xs mt-0.5" style={{ color: '#8892A4' }}>Extra security for your account</p>
+                      <p className="text-primary font-medium text-sm">Authenticator App</p>
+                      <p className="text-xs mt-0.5 text-secondary">Extra security for your account</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="badge-green text-xs">Enabled</span>
@@ -202,7 +206,7 @@ export default function SettingsScreen() {
             {tab === 'payment' && (
               <div className="space-y-5">
                 <div className="glass-card p-6">
-                  <h2 className="text-white font-semibold mb-5">Payment Methods</h2>
+                  <h2 className="text-primary font-semibold mb-5">Payment Methods</h2>
                   <div className="space-y-3 mb-4">
                     {[
                       { type: 'Visa', last4: '4242', expiry: '12/27', isDefault: true },
@@ -212,17 +216,17 @@ export default function SettingsScreen() {
                         style={{ background: 'rgba(255,255,255,0.03)', border: card.isDefault ? '1px solid rgba(0,240,255,0.25)' : '1px solid rgba(255,255,255,0.06)' }}>
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-6 rounded-md flex items-center justify-center text-xs font-bold"
-                            style={{ background: 'rgba(0,240,255,0.1)', color: '#00F0FF' }}>
+                            style={{ background: 'rgba(0,240,255,0.1)', color: '#0077FF' }}>
                             {card.type.slice(0, 4)}
                           </div>
                           <div>
-                            <p className="text-white text-sm font-medium">•••• {card.last4}</p>
-                            <p className="text-xs" style={{ color: '#8892A4' }}>Expires {card.expiry}</p>
+                            <p className="text-primary text-sm font-medium">•••• {card.last4}</p>
+                            <p className="text-xs text-secondary">Expires {card.expiry}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
                           {card.isDefault && <span className="badge-cyan text-xs">Default</span>}
-                          <button className="text-xs" style={{ color: '#EF4444' }}>Remove</button>
+                          <button className="text-xs text-red">Remove</button>
                         </div>
                       </div>
                     ))}
@@ -234,7 +238,7 @@ export default function SettingsScreen() {
                 </div>
 
                 <div className="glass-card p-6">
-                  <h2 className="text-white font-semibold mb-5">Withdrawal Settings</h2>
+                  <h2 className="text-primary font-semibold mb-5">Withdrawal Settings</h2>
                   <div className="space-y-4">
                     {[
                       { label: 'Bank Account', value: '•••• •••• 1234', status: 'Verified' },
@@ -243,8 +247,8 @@ export default function SettingsScreen() {
                       <div key={method.label} className="flex items-center justify-between p-4 rounded-xl"
                         style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
                         <div>
-                          <p className="text-white text-sm font-medium">{method.label}</p>
-                          <p className="text-xs" style={{ color: '#8892A4' }}>{method.value}</p>
+                          <p className="text-primary text-sm font-medium">{method.label}</p>
+                          <p className="text-xs text-secondary">{method.value}</p>
                         </div>
                         <span className="badge-green text-xs">{method.status}</span>
                       </div>
@@ -257,7 +261,7 @@ export default function SettingsScreen() {
             {/* Notifications Tab */}
             {tab === 'notifications' && (
               <div className="glass-card p-6">
-                <h2 className="text-white font-semibold mb-5">Notification Preferences</h2>
+                <h2 className="text-primary font-semibold mb-5">Notification Preferences</h2>
                 <div className="space-y-4">
                   {[
                     { label: 'New proposal received', desc: 'When a freelancer submits a proposal', enabled: true },
@@ -270,16 +274,69 @@ export default function SettingsScreen() {
                     <div key={notif.label} className="flex items-center justify-between py-3 border-b"
                       style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
                       <div>
-                        <p className="text-white text-sm font-medium">{notif.label}</p>
-                        <p className="text-xs mt-0.5" style={{ color: '#8892A4' }}>{notif.desc}</p>
+                        <p className="text-primary text-sm font-medium">{notif.label}</p>
+                        <p className="text-xs mt-0.5 text-secondary">{notif.desc}</p>
                       </div>
                       <div className="w-10 h-5 rounded-full relative cursor-pointer transition-all"
-                        style={{ background: notif.enabled ? '#00F0FF' : 'rgba(255,255,255,0.1)' }}>
+                        style={{ background: notif.enabled ? '#0077FF' : 'rgba(255,255,255,0.1)' }}>
                         <div className="absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all"
                           style={{ left: notif.enabled ? '22px' : '2px' }} />
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* Preferences Tab */}
+            {tab === 'preferences' && (
+              <div className="space-y-5">
+                {/* Language Settings */}
+                <div className="glass-card p-6">
+                  <h2 className="text-primary font-semibold mb-5">{t('settings.language')}</h2>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm text-secondary mb-2">
+                        {t('settings.selectLanguage')}
+                      </label>
+                      <LanguageSwitcher variant="select" />
+                    </div>
+                    <p className="text-xs text-secondary">
+                      Changes will be applied immediately across the application.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Theme Settings */}
+                <div className="glass-card p-6">
+                  <h2 className="text-primary font-semibold mb-5">{t('settings.theme')}</h2>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm text-secondary mb-2">
+                        {t('settings.selectTheme')}
+                      </label>
+                      <div className="grid grid-cols-2 gap-4">
+                        <button className="flex items-center gap-3 p-4 rounded-xl border-2 border-border hover:border-cyan transition-colors">
+                          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
+                            <span className="text-2xl">🌙</span>
+                          </div>
+                          <div className="text-left">
+                            <p className="text-primary font-medium text-sm">{t('settings.darkMode')}</p>
+                            <p className="text-xs text-secondary">Default theme</p>
+                          </div>
+                        </button>
+                        <button className="flex items-center gap-3 p-4 rounded-xl border-2 border-border hover:border-cyan transition-colors">
+                          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-gray-100 to-white flex items-center justify-center">
+                            <span className="text-2xl">☀️</span>
+                          </div>
+                          <div className="text-left">
+                            <p className="text-primary font-medium text-sm">{t('settings.lightMode')}</p>
+                            <p className="text-xs text-secondary">Light theme</p>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -290,8 +347,8 @@ export default function SettingsScreen() {
                 <div className="glass-card p-6"
                   style={{ background: 'linear-gradient(135deg, rgba(159,75,255,0.06), rgba(0,240,255,0.04))', border: '1px solid rgba(159,75,255,0.2)' }}>
                   <div className="flex items-center gap-2 mb-4">
-                    <Bot size={18} style={{ color: '#9F4BFF' }} />
-                    <h2 className="text-white font-semibold">AI Preferences</h2>
+                    <Bot size={18} className="text-purple" />
+                    <h2 className="text-primary font-semibold">AI Preferences</h2>
                     <span className="badge-purple text-xs ml-auto">Pro Feature</span>
                   </div>
                   <div className="space-y-4">
@@ -304,8 +361,8 @@ export default function SettingsScreen() {
                       <div key={setting.label} className="flex items-center justify-between py-3 border-b"
                         style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
                         <div>
-                          <p className="text-white text-sm font-medium">{setting.label}</p>
-                          <p className="text-xs mt-0.5" style={{ color: '#8892A4' }}>{setting.desc}</p>
+                          <p className="text-primary text-sm font-medium">{setting.label}</p>
+                          <p className="text-xs mt-0.5 text-secondary">{setting.desc}</p>
                         </div>
                         <div className="w-10 h-5 rounded-full relative cursor-pointer"
                           style={{ background: setting.enabled ? '#9F4BFF' : 'rgba(255,255,255,0.1)' }}>
@@ -318,8 +375,8 @@ export default function SettingsScreen() {
                 </div>
 
                 <div className="glass-card p-6">
-                  <h2 className="text-white font-semibold mb-4">AI Profile Optimizer</h2>
-                  <p className="text-sm mb-4" style={{ color: '#8892A4' }}>
+                  <h2 className="text-primary font-semibold mb-4">AI Profile Optimizer</h2>
+                  <p className="text-sm mb-4 text-secondary">
                     Our AI analyzes top-performing profiles in your category and suggests improvements.
                   </p>
                   <button onClick={handleAIOptimize} disabled={isOptimizing}
@@ -331,7 +388,7 @@ export default function SettingsScreen() {
                     )}
                   </button>
                   {optimizeSuccess && (
-                    <p className="text-sm mt-3" style={{ color: '#22C55E' }}>✓ Profile optimized! Your bio has been updated.</p>
+                    <p className="text-sm mt-3 text-green">✓ Profile optimized! Your bio has been updated.</p>
                   )}
                 </div>
               </div>

@@ -5,17 +5,17 @@
 
 /* ── Main Container ── */
 .auth-container {
-  background: #0A0F1C;
+  background: var(--background);
 }
 
 /* ── Left Panel ── */
 .auth-left-panel {
-  background: linear-gradient(135deg, #0D1526 0%, #0A0F1C 100%);
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(135deg, var(--gb-bg-secondary) 0%, var(--background) 100%);
+  border-right: 1px solid var(--gb-border);
 }
 
 .auth-orb-cyan {
-  background: radial-gradient(circle, #00F0FF, transparent);
+  background: radial-gradient(circle, #0077FF, transparent);
   filter: blur(40px);
 }
 
@@ -26,19 +26,19 @@
 }
 
 .auth-logo-bg {
-  background: linear-gradient(135deg, #00F0FF, #9F4BFF);
+  background: linear-gradient(135deg, #0077FF, #9F4BFF);
 }
 
 .auth-logo-icon {
-  color: #0A0F1C;
+  color: var(--primary-foreground);
 }
 
 .auth-ai-avatar {
-  background: radial-gradient(circle at 30% 30%, rgba(0, 240, 255, 0.8), rgba(159, 75, 255, 0.6));
+  background: radial-gradient(circle at 30% 30%, rgba(0, 119, 255, 0.8), rgba(159, 75, 255, 0.6));
 }
 
 .auth-ai-avatar-icon {
-  color: #0A0F1C;
+  color: var(--primary-foreground);
 }
 
 .auth-orb-green {
@@ -60,62 +60,62 @@
 }
 
 .auth-description {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .auth-avatar-border {
-  border-color: #0A0F1C;
+  border-color: var(--background);
 }
 
 .auth-star-icon {
-  color: #F59E0B;
+  color: var(--gb-amber);
 }
 
 .auth-footer-text {
-  color: #4B5563;
+  color: var(--gb-text-muted);
 }
 
 /* ── Right Panel - Form ── */
 .auth-subtitle {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .auth-role-selected {
-  background: rgba(0, 240, 255, 0.1);
-  border: 1px solid rgba(0, 240, 255, 0.35);
-  color: #00F0FF;
+  background: rgba(0, 119, 255, 0.1);
+  border: 1px solid rgba(0, 119, 255, 0.35);
+  color: var(--gb-cyan);
 }
 
 .auth-role-unselected {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #8892A4;
+  background: var(--gb-glass-bg);
+  border: 1px solid var(--gb-border);
+  color: var(--gb-text-secondary);
 }
 
 .auth-role-desc {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .auth-google-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
+  background: var(--gb-glass-hover);
+  border: 1px solid var(--gb-border);
+  color: var(--foreground);
 }
 
 .auth-divider {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--gb-border);
 }
 
 .auth-divider-text {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .auth-input-icon {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .auth-link-cyan {
-  color: #00F0FF;
+  color: var(--gb-cyan);
 }
 
 .auth-demo-box {
@@ -124,17 +124,17 @@
 }
 
 .auth-demo-title {
-  color: #9F4BFF;
+  color: var(--gb-purple);
 }
 
 .auth-demo-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #8892A4;
+  background: var(--gb-glass-hover);
+  border: 1px solid var(--gb-border);
+  color: var(--gb-text-secondary);
 }
 
 .auth-switch-text {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 /* ── Input with Icon Padding ── */

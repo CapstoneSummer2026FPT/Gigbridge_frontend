@@ -6,7 +6,7 @@ import { useApp } from '../../../app/providers/AppProvider';
 interface ChatMessage { role: 'user' | 'ai'; content: string; type?: 'text' | 'code' | 'insight'; timestamp: Date; }
 
 const AI_FEATURES = [
-  { icon: <FileText size={18} />, label: 'Proposal Writer', desc: 'Generate compelling proposals', color: '#00F0FF' },
+  { icon: <FileText size={18} />, label: 'Proposal Writer', desc: 'Generate compelling proposals', color: '#0077FF' },
   { icon: <Code size={18} />, label: 'Code Review', desc: 'Analyze and improve code', color: '#9F4BFF' },
   { icon: <BarChart2 size={18} />, label: 'Progress Insights', desc: 'Analyze project health', color: '#22C55E' },
   { icon: <Lightbulb size={18} />, label: 'Skill Advisor', desc: 'Career growth suggestions', color: '#F59E0B' },
@@ -84,15 +84,15 @@ export default function AIAssistantScreen() {
               style={{ background: 'radial-gradient(circle at 30% 30%, rgba(0,240,255,0.9), rgba(159,75,255,0.7))' }}>
               <Bot size={36} style={{ color: '#0A0F1C' }} />
             </div>
-            <p className="text-white font-bold">GigBridge AI</p>
+            <p className="text-primary font-bold">GigBridge AI</p>
             <div className="flex items-center justify-center gap-1 mt-1">
               <div className="w-2 h-2 rounded-full" style={{ background: '#22C55E' }} />
-              <p className="text-xs" style={{ color: '#22C55E' }}>Online · Instant Response</p>
+              <p className="text-xs text-green">Online · Instant Response</p>
             </div>
           </div>
 
           {/* Features */}
-          <p className="text-xs font-semibold mb-3" style={{ color: '#8892A4' }}>AI CAPABILITIES</p>
+          <p className="text-xs font-semibold mb-3 text-secondary">AI CAPABILITIES</p>
           <div className="space-y-2 mb-6">
             {AI_FEATURES.map(feature => (
               <button key={feature.label}
@@ -107,15 +107,15 @@ export default function AIAssistantScreen() {
                   <span style={{ color: feature.color }}>{feature.icon}</span>
                 </div>
                 <div>
-                  <p className="text-white text-xs font-medium">{feature.label}</p>
-                  <p className="text-[10px]" style={{ color: '#8892A4' }}>{feature.desc}</p>
+                  <p className="text-primary text-xs font-medium">{feature.label}</p>
+                  <p className="text-[10px] text-secondary">{feature.desc}</p>
                 </div>
               </button>
             ))}
           </div>
 
           {/* Quick Prompts */}
-          <p className="text-xs font-semibold mb-3" style={{ color: '#8892A4' }}>QUICK PROMPTS</p>
+          <p className="text-xs font-semibold mb-3 text-secondary">QUICK PROMPTS</p>
           <div className="space-y-1">
             {QUICK_PROMPTS.slice(0, 4).map(prompt => (
               <button key={prompt} onClick={() => sendMessage(prompt)}
@@ -128,9 +128,9 @@ export default function AIAssistantScreen() {
 
           {/* Document Analyzer */}
           <div className="mt-6 upload-zone p-4" onClick={() => {}}>
-            <Upload size={18} className="mx-auto mb-1" style={{ color: '#8892A4' }} />
-            <p className="text-xs text-white font-medium">Analyze Document</p>
-            <p className="text-[10px]" style={{ color: '#8892A4' }}>PDF, DOCX, Code files</p>
+            <Upload size={18} className="mx-auto mb-1 text-secondary" />
+            <p className="text-xs text-primary font-medium">Analyze Document</p>
+            <p className="text-[10px] text-secondary">PDF, DOCX, Code files</p>
           </div>
         </div>
 
@@ -141,12 +141,12 @@ export default function AIAssistantScreen() {
             style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(10,15,28,0.8)' }}>
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full flex items-center justify-center animate-orb"
-                style={{ background: 'linear-gradient(135deg, #00F0FF, #9F4BFF)' }}>
+                style={{ background: 'linear-gradient(135deg, #0077FF, #9F4BFF)' }}>
                 <Bot size={16} style={{ color: '#0A0F1C' }} />
               </div>
               <div>
-                <p className="text-white font-semibold text-sm">GigBridge AI Assistant</p>
-                <p className="text-xs" style={{ color: '#22C55E' }}>Powered by Advanced Intelligence</p>
+                <p className="text-primary font-semibold text-sm">GigBridge AI Assistant</p>
+                <p className="text-xs text-green">Powered by Advanced Intelligence</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -165,7 +165,7 @@ export default function AIAssistantScreen() {
               <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
                 {msg.role === 'ai' ? (
                   <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center mt-1"
-                    style={{ background: 'linear-gradient(135deg, #00F0FF, #9F4BFF)' }}>
+                    style={{ background: 'linear-gradient(135deg, #0077FF, #9F4BFF)' }}>
                     <Bot size={14} style={{ color: '#0A0F1C' }} />
                   </div>
                 ) : (
@@ -199,7 +199,7 @@ export default function AIAssistantScreen() {
             {isThinking && (
               <div className="flex gap-3">
                 <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center"
-                  style={{ background: 'linear-gradient(135deg, #00F0FF, #9F4BFF)' }}>
+                  style={{ background: 'linear-gradient(135deg, #0077FF, #9F4BFF)' }}>
                   <Bot size={14} style={{ color: '#0A0F1C' }} />
                 </div>
                 <div className="px-5 py-4 rounded-2xl flex items-center gap-2"
@@ -207,7 +207,7 @@ export default function AIAssistantScreen() {
                   <div className="typing-dot" />
                   <div className="typing-dot" />
                   <div className="typing-dot" />
-                  <span className="text-xs ml-1" style={{ color: '#8892A4' }}>AI is thinking...</span>
+                  <span className="text-xs ml-1 text-secondary">AI is thinking...</span>
                 </div>
               </div>
             )}

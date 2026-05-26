@@ -94,7 +94,7 @@ export default function AuthScreen() {
           <div className="w-10 h-10 rounded-xl flex items-center justify-center auth-logo-bg">
             <Zap size={22} className="auth-logo-icon" />
           </div>
-          <span className="text-white text-xl font-black">GigBridge</span>
+          <span className="text-primary text-xl font-black">GigBridge</span>
           <span className="badge-cyan">AI</span>
         </div>
 
@@ -114,7 +114,7 @@ export default function AuthScreen() {
             </div>
           </div>
 
-          <h2 className="text-3xl font-black text-white mb-4">Your AI Career Partner</h2>
+          <h2 className="text-3xl font-black text-primary mb-4">Your AI Career Partner</h2>
           <p className="text-base max-w-sm auth-description">
             Join the intelligent marketplace that connects world-class talent with ambitious companies.
           </p>
@@ -158,10 +158,10 @@ export default function AuthScreen() {
             <div className="w-8 h-8 rounded-lg flex items-center justify-center auth-logo-bg">
               <Zap size={16} className="auth-logo-icon" />
             </div>
-            <span className="text-white font-bold">GigBridge</span>
+            <span className="text-primary font-bold">GigBridge</span>
           </div>
 
-          <h1 className="text-3xl font-black text-white mb-2">
+          <h1 className="text-3xl font-black text-primary mb-2">
             {mode === 'login' ? 'Welcome back' : 'Get started today'}
           </h1>
           <p className="mb-8 auth-subtitle">

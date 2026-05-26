@@ -30,7 +30,7 @@ interface StatCardProps {
 
 export function StatCard({ label, value, change, changeType = 'up', icon, accentColor = 'cyan' }: StatCardProps) {
   const colorMap = {
-    cyan: { bg: 'rgba(0,240,255,0.08)', color: '#00F0FF', border: 'rgba(0,240,255,0.15)' },
+    cyan: { bg: 'rgba(0,240,255,0.08)', color: '#0077FF', border: 'rgba(0,240,255,0.15)' },
     purple: { bg: 'rgba(159,75,255,0.08)', color: '#9F4BFF', border: 'rgba(159,75,255,0.15)' },
     green: { bg: 'rgba(34,197,94,0.08)', color: '#22C55E', border: 'rgba(34,197,94,0.15)' },
     amber: { bg: 'rgba(245,158,11,0.08)', color: '#F59E0B', border: 'rgba(245,158,11,0.15)' },
@@ -49,7 +49,7 @@ export function StatCard({ label, value, change, changeType = 'up', icon, accent
           </div>
         )}
       </div>
-      <p className="text-2xl font-bold text-white mb-1">{value}</p>
+      <p className="text-2xl font-bold text-primary mb-1">{value}</p>
       {change && (
         <p className="text-xs font-medium" style={{ color: changeColor }}>
           {changePrefix} {change}

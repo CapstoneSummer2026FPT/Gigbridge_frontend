@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Briefcase, Code, ChevronRight, Sparkles } from 'lucide-react';
 import { useApp } from '../../../app/providers/AppProvider';
+import { GuestLayout } from '../../../shared/components/AppLayout';
 import '../styles/role-selection-screen.css';
 
 export default function RoleSelectionScreen() {
@@ -25,7 +26,8 @@ export default function RoleSelectionScreen() {
   };
 
   return (
-    <div className="role-selection-container">
+    <GuestLayout>
+      <div className="role-selection-container">
       <div className="role-selection-content">
         {/* Header */}
         <div className="role-selection-header">
@@ -110,5 +112,6 @@ export default function RoleSelectionScreen() {
         </p>
       </div>
     </div>
+    </GuestLayout>
   );
 }

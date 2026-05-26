@@ -29,7 +29,7 @@ export function ParticleBackground() {
     const particles: Particle[] = [];
     const NUM_PARTICLES = 60;
     const CONNECTION_DIST = 150;
-    const COLORS = ['#00F0FF', '#9F4BFF', '#00A3FF'];
+    const COLORS = ['#0077FF', '#9F4BFF', '#00A3FF'];
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -73,7 +73,7 @@ export function ParticleBackground() {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(0, 240, 255, ${alpha})`;
+            ctx.strokeStyle = `rgba(0, 119, 255, ${alpha})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }

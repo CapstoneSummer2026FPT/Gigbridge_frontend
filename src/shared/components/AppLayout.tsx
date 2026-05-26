@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { TopNav } from './TopNav';
 import { Sidebar } from './Sidebar';
 import { useApp } from '../../app/providers/AppProvider';
@@ -23,15 +23,7 @@ export function AppLayout({ children, showSidebar = true, fullWidth = false }: A
     user = null;
   }
   
-  // Force re-render when user changes
   const hasSidebar = showSidebar && !!user;
-  
-  // Close sidebar when user logs out
-  useEffect(() => {
-    if (!user) {
-      setIsSidebarOpen(false);
-    }
-  }, [user]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);

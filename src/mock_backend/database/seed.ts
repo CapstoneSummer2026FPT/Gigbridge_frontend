@@ -487,6 +487,16 @@ export const SEED_REVIEWS: Review[] = [
   { id: 'rev_3', jobId: 'job_old_3', reviewerId: 'u_client_old_3', revieweeId: 'u_freelancer_1', rating: 4, comment: 'Great developer, solid code quality. Would hire again.', createdAt: '2025-12-10' },
   { id: 'rev_4', jobId: 'job_old_4', reviewerId: 'u_client_old_4', revieweeId: 'u_freelancer_2', rating: 5, comment: 'Sarah is the best designer I have ever worked with. Her work transformed our app and directly contributed to a 40% increase in user engagement.', createdAt: '2026-03-01' },
   { id: 'rev_5', jobId: 'job_old_5', reviewerId: 'u_client_old_5', revieweeId: 'u_freelancer_2', rating: 5, comment: 'The design system Sarah created is absolutely stunning. Professional, fast, and deeply talented.', createdAt: '2026-01-15' },
+  { id: 'rev_6', jobId: 'job_1', reviewerId: 'u_client_1', revieweeId: 'u_freelancer_1', rating: 2, comment: 'Delivery was late and the quality was not what I expected. Communication was poor and I had to follow up multiple times.', createdAt: '2026-04-10' },
+  { id: 'rev_7', jobId: 'job_2', reviewerId: 'u_client_2', revieweeId: 'u_freelancer_2', rating: 1, comment: 'This is spam! Click here for discount offers!!!', createdAt: '2026-04-12' },
+  { id: 'rev_8', jobId: 'job_3', reviewerId: 'u_client_1', revieweeId: 'u_freelancer_3', rating: 3, comment: 'Average work. Met the basic requirements but nothing exceptional. Could have been better with more attention to detail.', createdAt: '2026-04-08' },
+  { id: 'rev_9', jobId: 'job_4', reviewerId: 'u_client_2', revieweeId: 'u_freelancer_1', rating: 4, comment: 'Good experience overall. The freelancer was responsive and delivered quality work. A few minor issues but nothing major.', createdAt: '2026-03-28' },
+  { id: 'rev_10', jobId: 'job_5', reviewerId: 'u_client_1', revieweeId: 'u_freelancer_2', rating: 2, comment: 'Not satisfied. The work had several bugs and required extensive revisions. Would not recommend.', createdAt: '2026-03-25' },
+  { id: 'rev_11', jobId: 'job_6', reviewerId: 'demo_client_001', revieweeId: 'u_freelancer_1', rating: 5, comment: 'Excellent work! Very professional and exceeded my expectations. Will definitely work with this freelancer again.', createdAt: '2026-04-15' },
+  { id: 'rev_12', jobId: 'job_7', reviewerId: 'u_client_2', revieweeId: 'u_freelancer_3', rating: 4, comment: 'Solid work and good communication. Delivered on time and met all requirements. Would hire again.', createdAt: '2026-04-05' },
+  { id: 'rev_13', jobId: 'job_8', reviewerId: 'u_client_1', revieweeId: 'u_freelancer_2', rating: 1, comment: 'Terrible experience!!!! Never hire this person!!!', createdAt: '2026-04-01' },
+  { id: 'rev_14', jobId: 'job_9', reviewerId: 'demo_client_001', revieweeId: 'u_freelancer_3', rating: 3, comment: 'The work was okay but there were some communication issues. Had to clarify requirements multiple times.', createdAt: '2026-03-20' },
+  { id: 'rev_15', jobId: 'job_10', reviewerId: 'u_client_2', revieweeId: 'u_freelancer_1', rating: 5, comment: 'Amazing freelancer! Highly skilled, great communication, and delivered exceptional results. Best experience on this platform!', createdAt: '2026-04-18' },
 ];
 
 // ─── Market Insights Data ─────────────────────────

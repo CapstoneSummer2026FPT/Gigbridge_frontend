@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ChevronRight, Building, MapPin, Globe, Briefcase, DollarSign, Award, Sparkles } from 'lucide-react';
 import { useApp } from '../../../app/providers/AppProvider';
+import { GuestLayout } from '../../../shared/components/AppLayout';
 import '../styles/profile-setup-screen.css';
 
 const INDUSTRIES = [
@@ -90,7 +91,8 @@ export default function ProfileSetupScreen() {
   };
 
   return (
-    <div className="profile-setup-container">
+    <GuestLayout>
+      <div className="profile-setup-container">
       <div className="profile-setup-content">
         {/* Progress Bar */}
         <div className="profile-setup-progress">
@@ -354,5 +356,6 @@ export default function ProfileSetupScreen() {
         </div>
       </div>
     </div>
+    </GuestLayout>
   );
 }

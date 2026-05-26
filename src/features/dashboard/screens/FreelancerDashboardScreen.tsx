@@ -26,9 +26,9 @@ const AI_INSIGHTS = [
 
 export default function FreelancerDashboardScreen() {
   const navigate = useNavigate();
-  const { user, isLoading, freelancerProfile } = useApp();
+  const { user } = useApp();
   
-  const profile = freelancerProfile || DB.getFreelancerProfile(user?.id || 'demo_freelancer_001');
+  const profile = DB.getFreelancerProfile(user?.id || 'demo_freelancer_001');
   const proposals = DB.getProposalsByFreelancer(user?.id || 'demo_freelancer_001');
   const projects = DB.getProjectsByFreelancer(user?.id || 'demo_freelancer_001');
   const recommendedJobs = SEED_JOBS.filter(j => j.isAiRecommended).slice(0, 3);
@@ -38,19 +38,6 @@ export default function FreelancerDashboardScreen() {
   // Generate avatar from user's name
   const userName = user?.full_name || user?.first_name || 'Demo';
   const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(userName)}`;
-
-  if (isLoading) {
-    return (
-      <AppLayout>
-        <div className="max-w-7xl mx-auto flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mb-4"></div>
-            <p className="text-white">Loading your dashboard...</p>
-          </div>
-        </div>
-      </AppLayout>
-    );
-  }
 
   return (
     <AppLayout>
@@ -62,11 +49,11 @@ export default function FreelancerDashboardScreen() {
               className="w-16 h-16 rounded-2xl avatar-glow flex-shrink-0" />
             <div className="flex-1">
               <p className="text-sm mb-0.5 freelancer-dash-greeting">Welcome back,</p>
-              <h1 className="text-3xl font-black text-white">{userName} 👋</h1>
+              <h1 className="text-3xl font-black text-primary">{userName} 👋</h1>
               <div className="flex flex-wrap items-center gap-3 mt-2">
                 <div className="flex items-center gap-1">
                   <Star size={14} fill="#F59E0B" className="freelancer-dash-star-icon" />
-                  <span className="text-white font-semibold text-sm">{profile?.rating || 4.9}</span>
+                  <span className="text-primary font-semibold text-sm">{profile?.rating || 4.9}</span>
                   <span className="text-xs freelancer-dash-review-count">(87 reviews)</span>
                 </div>
                 <span className="badge-green">✓ Available</span>
@@ -104,15 +91,15 @@ export default function FreelancerDashboardScreen() {
           <div className="lg:col-span-2 glass-card p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-white font-semibold">Earnings Overview</h2>
+                <h2 className="text-primary font-semibold">Earnings Overview</h2>
                 <p className="text-xs mt-1 freelancer-dash-chart-desc">Monthly earnings breakdown</p>
               </div>
               <div className="text-right">
-                <p className="text-2xl font-black text-white">$8,200</p>
+                <p className="text-2xl font-black text-primary">$8,200</p>
                 <p className="text-xs freelancer-dash-chart-growth">↑ 10.8% vs last month</p>
               </div>
             </div>
-            <ResponsiveContainer width="100%" height={200} key="freelancer-earnings-container">
+            <ResponsiveContainer width="100%" height={200}>
               <AreaChart data={EARNINGS_DATA}>
                 <defs>
                   <linearGradient id="freelancerEarningsGrad2026" x1="0" y1="0" x2="0" y2="1">
@@ -120,64 +107,22 @@ export default function FreelancerDashboardScreen() {
                     <stop offset="95%" stopColor="#9F4BFF" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="month" tick={{ fill: '#8892A4', fontSize: 12 }} axisLine={false} tickLine={false} interval={0} />
-                <YAxis tick={{ fill: '#8892A4', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => `$${(v/1000).toFixed(0)}k`} />
-                <Tooltip contentStyle={{ background: '#0D1526', border: '1px solid rgba(159,75,255,0.3)', borderRadius: 10, color: 'white' }}
+                <XAxis key="freelancer-xaxis" dataKey="month" tick={{ fill: '#8892A4', fontSize: 12 }} axisLine={false} tickLine={false} interval={0} />
+                <YAxis key="freelancer-yaxis" tick={{ fill: '#8892A4', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => `$${(v/1000).toFixed(0)}k`} />
+                <Tooltip key="freelancer-tooltip" contentStyle={{ background: '#0D1526', border: '1px solid rgba(159,75,255,0.3)', borderRadius: 10, color: 'white' }}
                   formatter={(v: number) => [`$${v.toLocaleString()}`, 'Earned']} />
-                <Area type="monotone" dataKey="earned" stroke="#9F4BFF" strokeWidth={2} fill="url(#freelancerEarningsGrad2026)" isAnimationActive={false} />
+                <Area key="freelancer-area" type="monotone" dataKey="earned" stroke="#9F4BFF" strokeWidth={2} fill="url(#freelancerEarningsGrad2026)" isAnimationActive={false} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
 
-          {/* Profile Strength */}
           <div className="space-y-4">
-            <div className="glass-card p-5">
-              <h2 className="text-white font-semibold mb-4 text-sm">Profile Strength</h2>
-              <div className="flex items-center justify-center mb-4">
-                <div className="relative w-28 h-28">
-                  <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
-                    <defs>
-                      <linearGradient id="freelancerProfileGrad2026" x1="0" y1="0" x2="1" y2="0">
-                        <stop offset="0%" stopColor="#00F0FF" />
-                        <stop offset="100%" stopColor="#9F4BFF" />
-                      </linearGradient>
-                    </defs>
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="8" />
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="url(#freelancerProfileGrad2026)" strokeWidth="8"
-                      strokeDasharray={`${(profileStrength / 100) * 251.2} 251.2`}
-                      strokeLinecap="round" />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-2xl font-black text-white">{profileStrength}%</span>
-                    <span className="text-[10px] freelancer-dash-profile-label">Strength</span>
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-2">
-                {[
-                  { label: 'Portfolio', done: true }, { label: 'Bio', done: true },
-                  { label: 'Skills', done: true }, { label: 'Video Intro', done: false },
-                ].map(item => (
-                  <div key={item.label} className="flex items-center justify-between">
-                    <span className="text-xs freelancer-dash-profile-label">{item.label}</span>
-                    <span className={`text-xs font-medium ${item.done ? 'text-green-400' : 'text-yellow-400'}`}>
-                      {item.done ? '✓ Done' : '+ Add'}
-                    </span>
-                  </div>
-                ))}
-              </div>
-              <button className="btn-ghost-cyan w-full py-2 text-xs mt-4"
-                onClick={() => navigate('/settings')}>
-                AI Optimize Profile
-              </button>
-            </div>
-
             {/* Hourly Rate */}
             <div className="glass-card neon-border-green p-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs mb-1 freelancer-dash-rate-label">Hourly Rate</p>
-                  <p className="text-2xl font-black text-white">${profile?.hourly_rate || 75}<span className="text-sm opacity-50">/hr</span></p>
+                  <p className="text-2xl font-black text-primary">${profile?.hourly_rate || 75}<span className="text-sm opacity-50">/hr</span></p>
                 </div>
                 <div className="text-right">
                   <p className="text-xs mb-1 freelancer-dash-rate-label">Market Avg.</p>
@@ -194,14 +139,14 @@ export default function FreelancerDashboardScreen() {
             <div className="w-8 h-8 rounded-full flex items-center justify-center animate-orb freelancer-dash-ai-icon-bg">
               <Bot size={14} className="freelancer-dash-ai-icon" />
             </div>
-            <h2 className="text-white font-semibold">AI Career Insights</h2>
+            <h2 className="text-primary font-semibold">AI Career Insights</h2>
             <span className="badge-purple text-xs ml-auto">Personalized for You</span>
           </div>
           <div className="grid md:grid-cols-3 gap-3">
             {AI_INSIGHTS.map((insight, i) => (
               <div key={i} className="p-4 rounded-xl freelancer-dash-ai-insight-card">
                 <span className="text-xl mb-2 block">{insight.icon}</span>
-                <p className="text-sm text-white leading-relaxed">{insight.text}</p>
+                <p className="text-sm text-primary leading-relaxed">{insight.text}</p>
               </div>
             ))}
           </div>
@@ -212,7 +157,7 @@ export default function FreelancerDashboardScreen() {
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2">
               <Zap size={18} className="freelancer-dash-jobs-icon" />
-              <h2 className="text-white font-semibold">AI-Recommended Jobs</h2>
+              <h2 className="text-primary font-semibold">AI-Recommended Jobs</h2>
             </div>
             <button className="text-sm flex items-center gap-1 freelancer-dash-jobs-link"
               onClick={() => navigate('/jobs/browse')}>
@@ -228,7 +173,7 @@ export default function FreelancerDashboardScreen() {
                   <div className="flex items-start gap-3">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="text-white font-medium text-sm">{job.title}</h3>
+                        <h3 className="text-primary font-medium text-sm">{job.title}</h3>
                         {job.isAiRecommended && <span className="badge-cyan text-[10px]">⚡ AI Pick</span>}
                       </div>
                       <p className="text-xs mb-2 freelancer-dash-job-meta">

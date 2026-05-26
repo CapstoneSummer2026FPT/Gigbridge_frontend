@@ -1,0 +1,378 @@
+/**
+ * Utility Classes - Theme-Aware
+ * Use these classes instead of inline styles or Tailwind color classes
+ */
+
+/* ═══════════════════════════════════════════════
+   TEXT COLORS
+   ═══════════════════════════════════════════════ */
+
+.text-primary {
+  color: var(--foreground);
+}
+
+.text-secondary {
+  color: var(--gb-text-secondary);
+}
+
+.text-muted {
+  color: var(--gb-text-muted);
+}
+
+/* Brand Colors */
+.text-cyan {
+  color: var(--gb-cyan);
+}
+
+.text-purple {
+  color: var(--gb-purple);
+}
+
+.text-green {
+  color: var(--gb-green);
+}
+
+.text-amber {
+  color: var(--gb-amber);
+}
+
+.text-red {
+  color: var(--gb-red);
+}
+
+/* ═══════════════════════════════════════════════
+   BACKGROUND COLORS
+   ═══════════════════════════════════════════════ */
+
+.bg-primary {
+  background: var(--background);
+}
+
+.bg-card {
+  background: var(--card);
+}
+
+.bg-secondary {
+  background: var(--gb-bg-secondary);
+}
+
+.bg-tertiary {
+  background: var(--gb-bg-tertiary);
+}
+
+.bg-hover {
+  background: var(--gb-bg-hover);
+}
+
+/* Brand Background Colors with opacity */
+.bg-cyan-subtle {
+  background: rgba(0, 119, 255, 0.08);
+}
+
+.bg-cyan-medium {
+  background: rgba(0, 119, 255, 0.15);
+}
+
+.bg-purple-subtle {
+  background: rgba(159, 75, 255, 0.08);
+}
+
+.bg-purple-medium {
+  background: rgba(159, 75, 255, 0.15);
+}
+
+.bg-green-subtle {
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.bg-green-medium {
+  background: rgba(34, 197, 94, 0.15);
+}
+
+.bg-amber-subtle {
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.bg-amber-medium {
+  background: rgba(245, 158, 11, 0.15);
+}
+
+.bg-red-subtle {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.bg-red-medium {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+/* ═══════════════════════════════════════════════
+   BORDER COLORS
+   ═══════════════════════════════════════════════ */
+
+.border-primary {
+  border-color: var(--gb-border);
+}
+
+.border-hover {
+  border-color: var(--gb-border-hover);
+}
+
+.border-cyan {
+  border-color: rgba(0, 119, 255, 0.25);
+}
+
+.border-cyan-strong {
+  border-color: rgba(0, 119, 255, 0.4);
+}
+
+.border-purple {
+  border-color: rgba(159, 75, 255, 0.25);
+}
+
+.border-purple-strong {
+  border-color: rgba(159, 75, 255, 0.4);
+}
+
+.border-green {
+  border-color: rgba(34, 197, 94, 0.25);
+}
+
+.border-amber {
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.border-red {
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+/* ═══════════════════════════════════════════════
+   ICON COLORS
+   ═══════════════════════════════════════════════ */
+
+.icon-primary {
+  color: var(--foreground);
+}
+
+.icon-secondary {
+  color: var(--gb-text-secondary);
+}
+
+.icon-cyan {
+  color: var(--gb-cyan);
+}
+
+.icon-purple {
+  color: var(--gb-purple);
+}
+
+.icon-green {
+  color: var(--gb-green);
+}
+
+.icon-amber {
+  color: var(--gb-amber);
+}
+
+.icon-red {
+  color: var(--gb-red);
+}
+
+/* ═══════════════════════════════════════════════
+   COMMON COMBINATIONS
+   ═══════════════════════════════════════════════ */
+
+/* Tab Active */
+.tab-active {
+  background: rgba(159, 75, 255, 0.15);
+  border: 1px solid rgba(159, 75, 255, 0.4);
+  color: var(--gb-purple);
+}
+
+/* Tab Inactive */
+.tab-inactive {
+  background: var(--gb-glass-bg);
+  border: 1px solid var(--gb-border);
+  color: var(--gb-text-secondary);
+}
+
+/* Button variants */
+.btn-view {
+  background: rgba(0, 119, 255, 0.08);
+  color: var(--gb-cyan);
+}
+
+.btn-danger {
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--gb-red);
+}
+
+.btn-success {
+  background: rgba(34, 197, 94, 0.08);
+  color: var(--gb-green);
+}
+
+/* ═══════════════════════════════════════════════
+   HEADING & TITLE CLASSES
+   ═══════════════════════════════════════════════ */
+
+.heading-primary {
+  color: var(--foreground);
+  font-weight: 900;
+}
+
+.heading-secondary {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.label-text {
+  color: var(--gb-text-secondary);
+  font-size: 0.875rem;
+}
+
+.small-text {
+  color: var(--gb-text-secondary);
+  font-size: 0.75rem;
+}
+
+.tiny-text {
+  color: var(--gb-text-muted);
+  font-size: 0.625rem;
+}
+
+/* ═══════════════════════════════════════════════
+   COMPLEX COMPONENT STYLES
+   ═══════════════════════════════════════════════ */
+
+/* Tab Styles */
+.tab-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  transition: all 0.2s ease;
+  border: 1px solid var(--gb-border);
+}
+
+.tab-btn-active {
+  background: rgba(159, 75, 255, 0.15);
+  border-color: rgba(159, 75, 255, 0.4);
+  color: var(--gb-purple);
+}
+
+.tab-btn-inactive {
+  background: var(--gb-glass-bg);
+  color: var(--gb-text-secondary);
+}
+
+/* Alert/Warning Box */
+.alert-amber {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  color: var(--gb-amber);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+}
+
+.alert-red {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: var(--gb-red);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+}
+
+.alert-green {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  color: var(--gb-green);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+}
+
+.alert-cyan {
+  background: rgba(0, 119, 255, 0.06);
+  border: 1px solid rgba(0, 119, 255, 0.15);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+}
+
+/* Action Buttons */
+.action-btn {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.action-btn-view {
+  background: rgba(0, 119, 255, 0.08);
+  color: var(--gb-cyan);
+}
+
+.action-btn-ban {
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--gb-red);
+}
+
+.action-btn-approve {
+  background: rgba(34, 197, 94, 0.08);
+  color: var(--gb-green);
+}
+
+/* Live Data Indicator */
+.live-indicator {
+  background: rgba(0, 119, 255, 0.06);
+  border: 1px solid rgba(0, 119, 255, 0.15);
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+}
+
+/* Stat Icon Container */
+.stat-icon-cyan {
+  background: rgba(0, 119, 255, 0.1);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.stat-icon-purple {
+  background: rgba(159, 75, 255, 0.1);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.stat-icon-green {
+  background: rgba(34, 197, 94, 0.1);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.stat-icon-amber {
+  background: rgba(245, 158, 11, 0.1);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+/* Legend Indicator */
+.legend-dot {
+  width: 0.75rem;
+  height: 0.25rem;
+  border-radius: 9999px;
+}
+
+.legend-dot-cyan {
+  background: var(--gb-cyan);
+}
+
+.legend-dot-purple {
+  background: var(--gb-purple);
+}
+
+.legend-dot-green {
+  background: var(--gb-green);
+}
+
+.legend-dot-amber {
+  background: var(--gb-amber);
+}

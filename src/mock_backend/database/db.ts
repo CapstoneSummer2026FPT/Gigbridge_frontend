@@ -72,7 +72,10 @@ export const DB = {
   },
 
   // Reviews
-  getReviewsByUser: (userId: string) => db.reviews.filter(r => r.revieweeId === userId),
+  getReviewsByUser: (userId: string) => {
+    if (userId === 'all') return db.reviews;
+    return db.reviews.filter(r => r.revieweeId === userId);
+  },
 
   // Market Insights
   getMarketInsights: () => db.marketInsights,

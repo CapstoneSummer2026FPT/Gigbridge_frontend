@@ -3,39 +3,39 @@
  */
 
 .profile-meta {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .profile-star-icon {
-  color: #F59E0B;
+  color: var(--gb-amber);
 }
 
 .profile-section-bg {
   background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--gb-border);
 }
 
 .profile-label {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .profile-icon-cyan {
-  color: #00F0FF;
+  color: var(--gb-cyan);
 }
 
 .profile-icon-purple {
-  color: #9F4BFF;
+  color: var(--gb-purple);
 }
 
 .profile-icon-green {
-  color: #22C55E;
+  color: var(--gb-green);
 }
 
 .profile-portfolio-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--gb-glass-bg);
+  border: 1px solid var(--gb-border);
 }
 
 .profile-portfolio-desc {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }

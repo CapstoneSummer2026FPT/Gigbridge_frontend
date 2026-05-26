@@ -96,7 +96,7 @@ export default function JobDetailScreen() {
     return (
       <AppLayout>
         <div className="max-w-6xl mx-auto text-center py-20">
-          <p className="text-white">Loading...</p>
+          <p className="text-primary">Loading...</p>
         </div>
       </AppLayout>
     );
@@ -117,7 +117,7 @@ export default function JobDetailScreen() {
                     {job.isAiRecommended && <span className="badge-purple">⚡ AI Recommended</span>}
                     <span className="badge-green">Open</span>
                   </div>
-                  <h1 className="text-2xl font-black text-white mb-2">{job.title}</h1>
+                  <h1 className="text-2xl font-black text-primary mb-2">{job.title}</h1>
                   <div className="flex flex-wrap items-center gap-4 text-sm job-detail-meta">
                     <div className="flex items-center gap-1"><DollarSign size={14} />${job.budgetMin.toLocaleString()}–${job.budgetMax.toLocaleString()}</div>
                     <div className="flex items-center gap-1"><Globe size={14} />Remote</div>
@@ -142,7 +142,7 @@ export default function JobDetailScreen() {
                     <div className="flex items-center gap-3">
                       <Bot size={20} className="job-detail-icon" />
                       <div>
-                        <p className="text-white font-semibold text-sm">AI Match Analysis</p>
+                        <p className="text-primary font-semibold text-sm">AI Match Analysis</p>
                         <p className="text-xs job-detail-desc">Based on your profile and portfolio</p>
                       </div>
                     </div>
@@ -184,13 +184,13 @@ export default function JobDetailScreen() {
             {showProposalForm && (
               <div className="glass-card p-6 neon-border-cyan">
                 <div className="flex items-center justify-between mb-5">
-                  <h2 className="text-white font-semibold">Submit Your Proposal</h2>
+                  <h2 className="text-primary font-semibold">Submit Your Proposal</h2>
                   <button
                     onClick={generateAIProposal}
                     disabled={isGeneratingProposal}
                     className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all job-detail-proposal-bg">
                     {isGeneratingProposal ? (
-                      <><div className="w-3 h-3 rounded-full border border-[#00F0FF] border-t-transparent animate-spin" />Generating...</>
+                      <><div className="w-3 h-3 rounded-full border border-[#0077FF] border-t-transparent animate-spin" />Generating...</>
                     ) : (
                       <><Bot size={12} />✨ AI Write Proposal</>
                     )}
@@ -200,7 +200,7 @@ export default function JobDetailScreen() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="text-xs font-medium text-white mb-2 block">Your Bid ($)</label>
+                      <label className="text-xs font-medium text-primary mb-2 block">Your Bid ($)</label>
                       <div className="relative">
                         <DollarSign size={14} className="absolute left-3 top-1/2 -translate-y-1/2 job-detail-desc" />
                         <input type="number" value={proposalData.bidAmount}
@@ -209,7 +209,7 @@ export default function JobDetailScreen() {
                       </div>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-white mb-2 block">Delivery Days</label>
+                      <label className="text-xs font-medium text-primary mb-2 block">Delivery Days</label>
                       <input type="number" value={proposalData.deliveryDays}
                         onChange={e => setProposalData({ ...proposalData, deliveryDays: e.target.value })}
                         placeholder="30" className="input-gb w-full px-3 py-3 text-sm" />
@@ -217,7 +217,7 @@ export default function JobDetailScreen() {
                   </div>
 
                   <div>
-                    <label className="text-xs font-medium text-white mb-2 block">Cover Letter</label>
+                    <label className="text-xs font-medium text-primary mb-2 block">Cover Letter</label>
                     <textarea value={proposalData.coverLetter}
                       onChange={e => setProposalData({ ...proposalData, coverLetter: e.target.value })}
                       placeholder="Introduce yourself and explain why you're the best fit..."
@@ -240,7 +240,7 @@ export default function JobDetailScreen() {
 
             {/* Job Description */}
             <div className="glass-card p-6">
-              <h2 className="text-white font-semibold mb-4">Job Description</h2>
+              <h2 className="text-primary font-semibold mb-4">Job Description</h2>
               <div className="text-sm leading-relaxed whitespace-pre-line job-detail-desc">
                 {job.description}
               </div>
@@ -248,7 +248,7 @@ export default function JobDetailScreen() {
 
             {/* Skills Required */}
             <div className="glass-card p-6">
-              <h2 className="text-white font-semibold mb-4">Required Skills</h2>
+              <h2 className="text-primary font-semibold mb-4">Required Skills</h2>
               <div className="flex flex-wrap gap-2">
                 {job.skills.map(skill => (
                   <span key={skill} className="px-3 py-2 rounded-xl text-sm font-medium job-detail-proposal-bg">
@@ -260,13 +260,13 @@ export default function JobDetailScreen() {
 
             {/* Similar Jobs */}
             <div className="glass-card p-6">
-              <h2 className="text-white font-semibold mb-4">Similar Jobs</h2>
+              <h2 className="text-primary font-semibold mb-4">Similar Jobs</h2>
               <div className="space-y-3">
                 {similarJobs.map(sj => (
                   <div key={sj.id} className="p-4 rounded-xl cursor-pointer transition-all flex items-center justify-between job-detail-client-card"
                     onClick={() => navigate(`/jobs/${sj.id}`)}>
                     <div>
-                      <p className="text-white text-sm font-medium">{sj.title}</p>
+                      <p className="text-primary text-sm font-medium">{sj.title}</p>
                       <p className="text-xs mt-1 job-detail-desc">${sj.budgetMin.toLocaleString()}–${sj.budgetMax.toLocaleString()}</p>
                     </div>
                     <div className="flex items-center gap-2">
@@ -283,11 +283,11 @@ export default function JobDetailScreen() {
           <div className="space-y-5">
             {/* Client Info */}
             <div className="glass-card p-5">
-              <h2 className="text-white font-semibold mb-4 text-sm">About the Client</h2>
+              <h2 className="text-primary font-semibold mb-4 text-sm">About the Client</h2>
               <div className="flex items-center gap-3 mb-4">
                 <img src={client?.avatar} alt={client?.name} className="w-12 h-12 rounded-xl avatar-glow" />
                 <div>
-                  <p className="text-white font-semibold text-sm">{client?.name}</p>
+                  <p className="text-primary font-semibold text-sm">{client?.name}</p>
                   <p className="text-xs job-detail-desc">{clientProfile?.companyName}</p>
                 </div>
               </div>
@@ -297,26 +297,26 @@ export default function JobDetailScreen() {
                   <span className="text-xs job-detail-desc">Rating</span>
                   <div className="flex items-center gap-1">
                     <Star size={12} fill="#F59E0B" className="job-detail-star-icon" />
-                    <span className="text-white text-xs font-semibold">{clientProfile?.rating}</span>
+                    <span className="text-primary text-xs font-semibold">{clientProfile?.rating}</span>
                     <span className="text-xs job-detail-desc">({clientProfile?.reviewCount} reviews)</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-xs job-detail-desc">Total Spent</span>
-                  <span className="text-white text-xs font-semibold">${((clientProfile?.totalSpent || 0) / 1000).toFixed(0)}K+</span>
+                  <span className="text-primary text-xs font-semibold">${((clientProfile?.totalSpent || 0) / 1000).toFixed(0)}K+</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-xs job-detail-desc">Jobs Posted</span>
-                  <span className="text-white text-xs font-semibold">{clientProfile?.postedJobs}</span>
+                  <span className="text-primary text-xs font-semibold">{clientProfile?.postedJobs}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-xs job-detail-desc">Hire Rate</span>
-                  <span className="text-xs font-semibold" style={{ color: '#22C55E' }}>82%</span>
+                  <span className="text-xs font-semibold text-green">82%</span>
                 </div>
                 {clientProfile?.isVerifiedClient && (
                   <div className="flex items-center gap-2 p-2 rounded-lg" style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)' }}>
-                    <CheckCircle size={12} style={{ color: '#22C55E' }} />
-                    <span className="text-xs" style={{ color: '#22C55E' }}>Payment Verified</span>
+                    <CheckCircle size={12} className="text-green" />
+                    <span className="text-xs text-green">Payment Verified</span>
                   </div>
                 )}
               </div>
@@ -328,7 +328,7 @@ export default function JobDetailScreen() {
 
             {/* Job Details Summary */}
             <div className="glass-card p-5">
-              <h2 className="text-white font-semibold mb-4 text-sm">Job Details</h2>
+              <h2 className="text-primary font-semibold mb-4 text-sm">Job Details</h2>
               <div className="space-y-3">
                 {[
                   { label: 'Budget', value: `$${job.budgetMin.toLocaleString()} – $${job.budgetMax.toLocaleString()}` },
@@ -340,7 +340,7 @@ export default function JobDetailScreen() {
                 ].map(item => (
                   <div key={item.label} className="flex justify-between">
                     <span className="text-xs job-detail-desc">{item.label}</span>
-                    <span className="text-xs font-medium text-white">{item.value}</span>
+                    <span className="text-xs font-medium text-primary">{item.value}</span>
                   </div>
                 ))}
               </div>
@@ -351,7 +351,7 @@ export default function JobDetailScreen() {
               <div className="glass-card p-5 job-detail-proposal-bg">
                 <div className="flex items-center gap-2 mb-3">
                   <Video size={16} className="job-detail-icon" />
-                  <p className="text-white font-semibold text-sm">AI Instant Interview</p>
+                  <p className="text-primary font-semibold text-sm">AI Instant Interview</p>
                 </div>
                 <p className="text-xs mb-4 job-detail-desc">
                   Stand out from the crowd with an AI-powered interview that showcases your expertise in minutes.

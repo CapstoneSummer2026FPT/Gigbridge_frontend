@@ -1,17 +1,15 @@
 @import './fonts.css';
 @import './tailwind.css';
 @import './theme.css';
+@import './theme-colors.css';
+@import './utilities.css';
 
-/* Apply dark mode by default */
-html {
-  color-scheme: dark;
-}
-
-/* Ensure dark class on root */
+/* Use theme variables for background and text */
 html, body {
-  background-color: #0A0F1C;
-  color: #ffffff;
+  background-color: var(--background);
+  color: var(--foreground);
   min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Smooth scrolling */

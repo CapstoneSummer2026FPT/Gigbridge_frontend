@@ -3,22 +3,25 @@ import type { User, UserRole } from '../../types/models/User';
 import type { ClientProfile, FreelancerProfile } from '../../types/models/Profile';
 import { authHandlers } from '../../mock_backend/handlers/authHandlers';
 
+export type AppTheme = 'black' | 'white';
+
 /**
  * AppContextValue - Global application state interface
- * 
+ *
  * Provides authentication, user profile, theme, and loading states
  * to all components within the AppProvider tree.
  */
 interface AppContextValue {
   user: User | null;
   role: UserRole | null;
-  theme: 'dark' | 'light';
+  theme: AppTheme;
   isLoading: boolean;
   isAuthenticated: boolean;
   isOnboardingComplete: boolean;
   clientProfile: ClientProfile | null;
   freelancerProfile: FreelancerProfile | null;
   setRole: (role: UserRole) => void;
+  setTheme: (theme: AppTheme) => void;
   toggleTheme: () => void;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, firstName: string, lastName: string, role: UserRole) => Promise<void>;
@@ -48,14 +51,18 @@ const AppContext = createContext<AppContextValue | undefined>(undefined);
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [role, setRoleState] = useState<UserRole | null>(null);
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [theme, setThemeState] = useState<AppTheme>('black');
   const [isLoading, setIsLoading] = useState(true);
   const [clientProfile, setClientProfile] = useState<ClientProfile | null>(null);
   const [freelancerProfile, setFreelancerProfile] = useState<FreelancerProfile | null>(null);
 
   // Check for existing session on mount
   useEffect(() => {
-    document.documentElement.classList.add('dark');
+    // Load saved theme or default to black
+    const savedTheme = localStorage.getItem('gigbridge_theme') as AppTheme;
+    const initialTheme = savedTheme && (savedTheme === 'black' || savedTheme === 'white') ? savedTheme : 'black';
+    setThemeState(initialTheme);
+    document.documentElement.classList.add(initialTheme);
 
     const initApp = async () => {
       try {
@@ -64,7 +71,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           const { user: savedUser, role: savedRole } = JSON.parse(sessionData);
           setUser(savedUser);
           setRoleState(savedRole);
-          
+
           // Load profile data
           if (savedRole === 0) {
             // Load client profile
@@ -88,11 +95,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   // Apply theme to document
   useEffect(() => {
     const root = document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
+    const allThemes: AppTheme[] = ['black', 'white'];
+
+    // Remove all theme classes
+    allThemes.forEach(t => root.classList.remove(t));
+
+    // Add current theme class
+    root.classList.add(theme);
+
+    // Save theme to localStorage
+    localStorage.setItem('gigbridge_theme', theme);
   }, [theme]);
 
   const isAuthenticated = !!user;
@@ -104,8 +116,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setRoleState(newRole);
   }, []);
 
+  const setTheme = useCallback((newTheme: AppTheme) => {
+    setThemeState(newTheme);
+  }, []);
+
   const toggleTheme = useCallback(() => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+    setThemeState(prev => prev === 'black' ? 'white' : 'black');
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
@@ -178,40 +194,23 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         const profile = await authHandlers.createFreelancerProfile(user.id, profileData);
         setFreelancerProfile(profile);
       }
-      
-      // Update session to mark onboarding as complete
-      localStorage.setItem('gigbridge_session', JSON.stringify({
-        user,
-        role: user.role
-      }));
-      
-      // Reload profile to ensure it's fully synced
-      try {
-        const reloadedProfile = await authHandlers.getProfile(user.id);
-        if (user.role === 0) {
-          setClientProfile(reloadedProfile?.clientProfile || null);
-        } else {
-          setFreelancerProfile(reloadedProfile?.freelancerProfile || null);
-        }
-      } catch (err) {
-        console.warn('Could not reload profile:', err);
-      }
     } finally {
       setIsLoading(false);
     }
   }, [user]);
 
-  const value: AppContextValue = { 
-    user, 
-    role, 
-    theme, 
-    isLoading, 
+  const value: AppContextValue = {
+    user,
+    role,
+    theme,
+    isLoading,
     isAuthenticated,
     isOnboardingComplete,
     clientProfile,
     freelancerProfile,
-    setRole, 
-    toggleTheme, 
+    setRole,
+    setTheme,
+    toggleTheme,
     login,
     signup,
     logout,

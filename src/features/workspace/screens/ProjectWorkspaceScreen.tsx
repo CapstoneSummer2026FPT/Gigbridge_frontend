@@ -70,14 +70,13 @@ export default function ProjectWorkspaceScreen() {
     <AppLayout fullWidth>
       <div className="flex flex-col md:flex-row h-[calc(100vh-4rem)]">
         {/* Left Sidebar - Project Info */}
-        <div className="hidden md:flex flex-col w-72 flex-shrink-0 p-4 overflow-y-auto"
-          style={{ borderRight: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="hidden md:flex flex-col w-72 flex-shrink-0 p-4 overflow-y-auto border-r border-primary">
           {/* Project Header */}
           <div className="mb-5">
-            <h2 className="text-white font-semibold text-sm mb-1">{project.title}</h2>
+            <h2 className="text-primary font-semibold text-sm mb-1">{project.title}</h2>
             <div className="flex items-center gap-2">
               <span className="badge-green text-xs">Active</span>
-              <span className="text-xs" style={{ color: '#8892A4' }}>{project.progress}% complete</span>
+              <span className="text-xs text-secondary">{project.progress}% complete</span>
             </div>
             <div className="progress-bar-gb mt-2">
               <div className="progress-bar-gb-fill" style={{ width: `${project.progress}%` }} />
@@ -85,15 +84,15 @@ export default function ProjectWorkspaceScreen() {
           </div>
 
           {/* Partner Info */}
-          <div className="p-3 rounded-xl mb-5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-            <p className="text-xs mb-2" style={{ color: '#8892A4' }}>{role === 'client' ? 'Freelancer' : 'Client'}</p>
+          <div className="p-3 rounded-xl mb-5 bg-secondary border border-primary">
+            <p className="text-xs mb-2 text-secondary">{role === 'client' ? 'Freelancer' : 'Client'}</p>
             <div className="flex items-center gap-2">
               <img src={partner?.avatar} alt={partner?.name} className="w-8 h-8 rounded-lg" />
               <div>
-                <p className="text-white text-sm font-medium">{partner?.name}</p>
+                <p className="text-primary text-sm font-medium">{partner?.name}</p>
                 <div className="flex items-center gap-1">
-                  <div className="w-1.5 h-1.5 rounded-full" style={{ background: '#22C55E' }} />
-                  <p className="text-xs" style={{ color: '#22C55E' }}>Online</p>
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-medium" />
+                  <p className="text-xs text-green">Online</p>
                 </div>
               </div>
             </div>
@@ -102,12 +101,12 @@ export default function ProjectWorkspaceScreen() {
           {/* Milestones Overview */}
           <div className="mb-5">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-white text-sm font-semibold">Milestones</p>
-              <p className="text-xs" style={{ color: '#8892A4' }}>{completedMilestones}/{project.milestones.length}</p>
+              <p className="text-primary text-sm font-semibold">Milestones</p>
+              <p className="text-xs text-secondary">{completedMilestones}/{project.milestones.length}</p>
             </div>
             <div className="space-y-2">
               {project.milestones.map((m, i) => {
-                const statusColor = { paid: '#22C55E', approved: '#22C55E', in_progress: '#00F0FF', submitted: '#F59E0B', pending: '#8892A4' }[m.status] || '#8892A4';
+                const statusColor = { paid: '#22C55E', approved: '#22C55E', in_progress: '#0077FF', submitted: '#F59E0B', pending: '#8892A4' }[m.status] || '#8892A4';
                 return (
                   <div key={m.id} className="flex items-start gap-2 p-2 rounded-lg"
                     style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${statusColor}20` }}>
@@ -120,10 +119,10 @@ export default function ProjectWorkspaceScreen() {
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-white truncate">{m.title}</p>
+                      <p className="text-xs font-medium text-primary truncate">{m.title}</p>
                       <p className="text-[10px]" style={{ color: statusColor }}>{m.status.replace('_', ' ')}</p>
                     </div>
-                    <p className="text-xs font-semibold" style={{ color: '#22C55E' }}>${m.amount.toLocaleString()}</p>
+                    <p className="text-xs font-semibold text-green">${m.amount.toLocaleString()}</p>
                   </div>
                 );
               })}
@@ -132,14 +131,14 @@ export default function ProjectWorkspaceScreen() {
 
           {/* Budget */}
           <div className="p-3 rounded-xl mb-5" style={{ background: 'rgba(34,197,94,0.06)', border: '1px solid rgba(34,197,94,0.15)' }}>
-            <p className="text-xs mb-1" style={{ color: '#8892A4' }}>Budget Status</p>
-            <p className="text-lg font-black" style={{ color: '#22C55E' }}>
+            <p className="text-xs mb-1 text-secondary">Budget Status</p>
+            <p className="text-lg font-black text-green">
               ${project.paidAmount.toLocaleString()} <span className="text-sm opacity-60">/ ${project.totalBudget.toLocaleString()}</span>
             </p>
             <div className="progress-bar-gb mt-2">
               <div className="progress-bar-gb-fill" style={{ width: `${(project.paidAmount / project.totalBudget) * 100}%` }} />
             </div>
-            <p className="text-xs mt-1" style={{ color: '#8892A4' }}>{Math.round((project.paidAmount / project.totalBudget) * 100)}% paid</p>
+            <p className="text-xs mt-1 text-secondary">{Math.round((project.paidAmount / project.totalBudget) * 100)}% paid</p>
           </div>
 
           {/* AI Assistant Button */}
@@ -148,12 +147,12 @@ export default function ProjectWorkspaceScreen() {
             className="flex items-center gap-2 p-3 rounded-xl transition-all"
             style={{ background: showAI ? 'rgba(159,75,255,0.15)' : 'rgba(159,75,255,0.06)', border: showAI ? '1px solid rgba(159,75,255,0.4)' : '1px solid rgba(159,75,255,0.2)', color: '#9F4BFF' }}>
             <div className="w-8 h-8 rounded-full flex items-center justify-center"
-              style={{ background: 'linear-gradient(135deg, #00F0FF, #9F4BFF)' }}>
+              style={{ background: 'linear-gradient(135deg, #0077FF, #9F4BFF)' }}>
               <Bot size={14} style={{ color: '#0A0F1C' }} />
             </div>
             <div className="flex-1 text-left">
               <p className="text-sm font-semibold">AI Work Assistant</p>
-              <p className="text-xs" style={{ color: '#8892A4' }}>Ask anything about the project</p>
+              <p className="text-xs text-secondary">Ask anything about the project</p>
             </div>
           </button>
         </div>
@@ -166,8 +165,8 @@ export default function ProjectWorkspaceScreen() {
             <div className="flex items-center gap-3">
               <img src={partner?.avatar} alt={partner?.name} className="w-9 h-9 rounded-xl" />
               <div>
-                <p className="text-white font-semibold text-sm">{partner?.name}</p>
-                <p className="text-xs" style={{ color: '#22C55E' }}>● Online</p>
+                <p className="text-primary font-semibold text-sm">{partner?.name}</p>
+                <p className="text-xs text-green">● Online</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -177,7 +176,7 @@ export default function ProjectWorkspaceScreen() {
                   style={{
                     background: activeTab === tab ? 'rgba(0,240,255,0.12)' : 'rgba(255,255,255,0.04)',
                     border: activeTab === tab ? '1px solid rgba(0,240,255,0.3)' : '1px solid rgba(255,255,255,0.06)',
-                    color: activeTab === tab ? '#00F0FF' : '#8892A4',
+                    color: activeTab === tab ? '#0077FF' : '#8892A4',
                   }}>
                   {tab}
                 </button>
@@ -200,8 +199,8 @@ export default function ProjectWorkspaceScreen() {
                       {msg.type === 'file' ? (
                         <div className="flex items-center gap-2 p-3 rounded-xl"
                           style={{ background: isMe ? 'rgba(0,240,255,0.12)' : 'rgba(255,255,255,0.06)', border: `1px solid ${isMe ? 'rgba(0,240,255,0.25)' : 'rgba(255,255,255,0.1)'}` }}>
-                          <Files size={16} style={{ color: '#00F0FF' }} />
-                          <span className="text-white text-sm">{msg.fileName}</span>
+                          <Files size={16} className="text-cyan" />
+                          <span className="text-primary text-sm">{msg.fileName}</span>
                         </div>
                       ) : (
                         <div className="px-4 py-2.5 rounded-2xl text-sm"
@@ -228,7 +227,7 @@ export default function ProjectWorkspaceScreen() {
             <div className="flex-1 overflow-y-auto p-5">
               <div className="space-y-4">
                 {project.milestones.map((m, i) => {
-                  const statusColor = { paid: '#22C55E', approved: '#22C55E', in_progress: '#00F0FF', submitted: '#F59E0B', pending: '#8892A4' }[m.status] || '#8892A4';
+                  const statusColor = { paid: '#22C55E', approved: '#22C55E', in_progress: '#0077FF', submitted: '#F59E0B', pending: '#8892A4' }[m.status] || '#8892A4';
                   return (
                     <div key={m.id} className="glass-card p-5">
                       <div className="flex items-start justify-between gap-3 mb-3">
@@ -238,14 +237,14 @@ export default function ProjectWorkspaceScreen() {
                             <span className="text-sm font-bold" style={{ color: statusColor }}>{i + 1}</span>
                           </div>
                           <div>
-                            <h3 className="text-white font-semibold">{m.title}</h3>
+                            <h3 className="text-primary font-semibold">{m.title}</h3>
                             <p className="text-xs capitalize" style={{ color: statusColor }}>{m.status.replace('_', ' ')}</p>
                           </div>
                         </div>
-                        <p className="text-xl font-black" style={{ color: '#22C55E' }}>${m.amount.toLocaleString()}</p>
+                        <p className="text-xl font-black text-green">${m.amount.toLocaleString()}</p>
                       </div>
-                      <p className="text-sm" style={{ color: '#8892A4' }}>{m.description}</p>
-                      <p className="text-xs mt-2" style={{ color: '#8892A4' }}>Due: {m.dueDate}</p>
+                      <p className="text-sm text-secondary">{m.description}</p>
+                      <p className="text-xs mt-2 text-secondary">Due: {m.dueDate}</p>
                       {m.status === 'in_progress' && role === 'freelancer' && (
                         <button className="btn-cyan mt-3 px-4 py-2 text-sm">Submit for Review</button>
                       )}
@@ -265,7 +264,7 @@ export default function ProjectWorkspaceScreen() {
           {activeTab === 'files' && (
             <div className="flex-1 overflow-y-auto p-5">
               <div className="glass-card p-4 mb-4">
-                <p className="text-sm font-semibold text-white mb-3">Shared Files</p>
+                <p className="text-sm font-semibold text-primary mb-3">Shared Files</p>
                 {[
                   { name: 'architecture-diagram.pdf', size: '2.4 MB', date: 'Apr 2' },
                   { name: 'ui-wireframes.fig', size: '8.1 MB', date: 'Apr 5' },
@@ -274,19 +273,19 @@ export default function ProjectWorkspaceScreen() {
                   <div key={file.name} className="flex items-center justify-between p-3 rounded-xl mb-2"
                     style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
                     <div className="flex items-center gap-3">
-                      <Files size={16} style={{ color: '#00F0FF' }} />
+                      <Files size={16} className="text-cyan" />
                       <div>
-                        <p className="text-white text-sm font-medium">{file.name}</p>
-                        <p className="text-xs" style={{ color: '#8892A4' }}>{file.size} · {file.date}</p>
+                        <p className="text-primary text-sm font-medium">{file.name}</p>
+                        <p className="text-xs text-secondary">{file.size} · {file.date}</p>
                       </div>
                     </div>
-                    <button className="text-xs" style={{ color: '#00F0FF' }}>Download</button>
+                    <button className="text-xs text-cyan">Download</button>
                   </div>
                 ))}
               </div>
               <div className="upload-zone">
-                <Files size={24} className="mx-auto mb-2" style={{ color: '#8892A4' }} />
-                <p className="text-sm text-white">Drop files or click to upload</p>
+                <Files size={24} className="mx-auto mb-2 text-secondary" />
+                <p className="text-sm text-primary">Drop files or click to upload</p>
               </div>
             </div>
           )}
@@ -329,15 +328,15 @@ export default function ProjectWorkspaceScreen() {
               style={{ borderBottom: '1px solid rgba(159,75,255,0.15)' }}>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full flex items-center justify-center animate-orb"
-                  style={{ background: 'linear-gradient(135deg, #00F0FF, #9F4BFF)' }}>
+                  style={{ background: 'linear-gradient(135deg, #0077FF, #9F4BFF)' }}>
                   <Bot size={14} style={{ color: '#0A0F1C' }} />
                 </div>
                 <div>
-                  <p className="text-white text-sm font-semibold">AI Work Assistant</p>
-                  <p className="text-xs" style={{ color: '#22C55E' }}>● Active</p>
+                  <p className="text-primary text-sm font-semibold">AI Work Assistant</p>
+                  <p className="text-xs text-green">● Active</p>
                 </div>
               </div>
-              <button onClick={() => setShowAI(false)} style={{ color: '#8892A4' }}>
+              <button onClick={() => setShowAI(false)} className="text-secondary">
                 <X size={16} />
               </button>
             </div>
@@ -348,7 +347,7 @@ export default function ProjectWorkspaceScreen() {
                 <div key={i} className={`flex gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
                   {msg.role === 'ai' && (
                     <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
-                      style={{ background: 'linear-gradient(135deg, #00F0FF, #9F4BFF)' }}>
+                      style={{ background: 'linear-gradient(135deg, #0077FF, #9F4BFF)' }}>
                       <Bot size={10} style={{ color: '#0A0F1C' }} />
                     </div>
                   )}

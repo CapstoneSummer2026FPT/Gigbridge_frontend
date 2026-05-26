@@ -3,23 +3,23 @@
  */
 
 .ai-assistant-desc {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .ai-assistant-suggestion-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--gb-glass-bg);
+  border: 1px solid var(--gb-border);
 }
 
 .ai-assistant-suggestion-icon {
   background: rgba(159, 75, 255, 0.12);
   border: 1px solid rgba(159, 75, 255, 0.3);
-  color: #9F4BFF;
+  color: var(--gb-purple);
 }
 
 .ai-assistant-message-user {
-  background: rgba(0, 240, 255, 0.08);
-  border: 1px solid rgba(0, 240, 255, 0.2);
+  background: rgba(0, 119, 255, 0.08);
+  border: 1px solid rgba(0, 119, 255, 0.2);
 }
 
 .ai-assistant-message-ai {
@@ -28,12 +28,12 @@
 }
 
 .ai-assistant-message-time {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .ai-assistant-input-bg {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--gb-glass-bg);
+  border: 1px solid var(--gb-border);
 }
 
 .ai-assistant-thinking {
@@ -42,5 +42,5 @@
 }
 
 .ai-assistant-thinking-text {
-  color: #9F4BFF;
+  color: var(--gb-purple);
 }

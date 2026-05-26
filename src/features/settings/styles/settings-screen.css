@@ -3,37 +3,37 @@
  */
 
 .settings-desc {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .settings-tab-active {
-  background: rgba(0, 240, 255, 0.1);
-  border: 1px solid rgba(0, 240, 255, 0.3);
-  color: #00F0FF;
+  background: rgba(0, 119, 255, 0.1);
+  border: 1px solid rgba(0, 119, 255, 0.3);
+  color: var(--gb-cyan);
 }
 
 .settings-tab-inactive {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: #8892A4;
+  background: var(--gb-glass-bg);
+  border: 1px solid var(--gb-border);
+  color: var(--gb-text-secondary);
 }
 
 .settings-section {
   background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--gb-border);
 }
 
 .settings-label {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .settings-input-bg {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--gb-glass-bg);
+  border: 1px solid var(--gb-border);
 }
 
 .settings-toggle-active {
-  background: #00F0FF;
+  background: #0077FF;
 }
 
 .settings-toggle-inactive {

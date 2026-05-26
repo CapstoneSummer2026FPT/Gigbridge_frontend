@@ -3,52 +3,52 @@
  */
 
 .workspace-meta {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .workspace-icon-cyan {
-  color: #00F0FF;
+  color: var(--gb-cyan);
 }
 
 .workspace-icon-purple {
-  color: #9F4BFF;
+  color: var(--gb-purple);
 }
 
 .workspace-icon-green {
-  color: #22C55E;
+  color: var(--gb-green);
 }
 
 .workspace-tab-active {
-  background: rgba(0, 240, 255, 0.1);
-  border-bottom: 2px solid #00F0FF;
-  color: #00F0FF;
+  background: rgba(0, 119, 255, 0.1);
+  border-bottom: 2px solid #0077FF;
+  color: var(--gb-cyan);
 }
 
 .workspace-tab-inactive {
   border-bottom: 2px solid transparent;
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .workspace-milestone-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--gb-glass-bg);
+  border: 1px solid var(--gb-border);
 }
 
 .workspace-message-sent {
-  background: rgba(0, 240, 255, 0.08);
-  border: 1px solid rgba(0, 240, 255, 0.2);
+  background: rgba(0, 119, 255, 0.08);
+  border: 1px solid rgba(0, 119, 255, 0.2);
 }
 
 .workspace-message-received {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--gb-glass-bg);
+  border: 1px solid var(--gb-border);
 }
 
 .workspace-message-time {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .workspace-input-bg {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--gb-glass-bg);
+  border: 1px solid var(--gb-border);
 }

@@ -19,7 +19,6 @@ export default function PostJobScreen() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [skillInput, setSkillInput] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [form, setForm] = useState({
     title: '',
@@ -54,11 +53,17 @@ export default function PostJobScreen() {
 
   const removeSkill = (skill: string) => setForm(prev => ({ ...prev, skills: prev.skills.filter(s => s !== skill) }));
 
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
-    await new Promise(r => setTimeout(r, 1000));
-    setIsSubmitting(false);
-    navigate('/client/dashboard');
+  const handleNextStep = () => {
+    // Validation
+    if (!form.title || !form.category || !form.description) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    // Navigate to interview questions with job data
+    navigate('/jobs/post/interview-questions', {
+      state: { jobData: form }
+    });
   };
 
   return (
@@ -67,7 +72,7 @@ export default function PostJobScreen() {
         {/* Header */}
         <div className="mb-8">
           <p className="post-job-header-subtitle text-sm mb-1">Post a New Job</p>
-          <h1 className="post-job-header text-3xl font-black text-white">Describe Your Project</h1>
+          <h1 className="post-job-header text-3xl font-black text-primary">Describe Your Project</h1>
           <p className="post-job-header-description mt-2">Our AI will help you write the perfect job post to attract top talent</p>
         </div>
 
@@ -76,7 +81,7 @@ export default function PostJobScreen() {
           <div className="lg:col-span-2 space-y-5">
             {/* Job Title */}
             <div className="glass-card p-5">
-              <label className="text-white text-sm font-semibold block mb-2">Job Title *</label>
+              <label className="text-primary text-sm font-semibold block mb-2">Job Title *</label>
               <input
                 type="text"
                 placeholder="e.g. Senior React Developer for E-commerce Platform"
@@ -89,7 +94,7 @@ export default function PostJobScreen() {
 
             {/* Category */}
             <div className="glass-card p-5">
-              <label className="text-white text-sm font-semibold block mb-3">Category *</label>
+              <label className="text-primary text-sm font-semibold block mb-3">Category *</label>
               <div className="flex flex-wrap gap-2">
                 {CATEGORIES.map(cat => (
                   <button key={cat} onClick={() => setForm({ ...form, category: cat })}
@@ -102,7 +107,7 @@ export default function PostJobScreen() {
 
             {/* Skills */}
             <div className="glass-card p-5">
-              <label className="text-white text-sm font-semibold block mb-3">Required Skills</label>
+              <label className="text-primary text-sm font-semibold block mb-3">Required Skills</label>
               <div className="flex flex-wrap gap-2 mb-3">
                 {form.skills.map(skill => (
                   <span key={skill} className="flex items-center gap-1 badge-cyan">
@@ -140,14 +145,14 @@ export default function PostJobScreen() {
             {/* Description with AI Generator */}
             <div className="glass-card p-5">
               <div className="flex items-center justify-between mb-3">
-                <label className="text-white text-sm font-semibold">Job Description *</label>
+                <label className="text-primary text-sm font-semibold">Job Description *</label>
                 <button
                   onClick={generateDescription}
                   disabled={isGenerating || !form.title || !form.category}
                   className="ai-generate-btn flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all disabled:opacity-40">
                   {isGenerating ? (
                     <>
-                      <div className="ai-generate-spinner w-4 h-4 rounded-full border-2 border-[#00F0FF] border-t-transparent animate-spin" />
+                      <div className="ai-generate-spinner w-4 h-4 rounded-full border-2 border-[#0077FF] border-t-transparent animate-spin" />
                       Generating...
                     </>
                   ) : (
@@ -176,7 +181,7 @@ export default function PostJobScreen() {
 
             {/* Budget */}
             <div className="glass-card p-5">
-              <label className="text-white text-sm font-semibold block mb-3">Budget</label>
+              <label className="text-primary text-sm font-semibold block mb-3">Budget</label>
               <div className="flex gap-3 mb-4">
                 {['fixed', 'hourly'].map(type => (
                   <button key={type} onClick={() => setForm({ ...form, jobType: type as 'fixed' | 'hourly' })}
@@ -186,17 +191,15 @@ export default function PostJobScreen() {
                 ))}
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <div className="relative">
-                  <DollarSign size={14} className="input-hint absolute left-3 top-1/2 -translate-y-1/2" />
+                <div>
                   <input type="number" placeholder="Min" value={form.budgetMin}
                     onChange={e => setForm({ ...form, budgetMin: e.target.value })}
-                    className="input-gb w-full pl-8 pr-3 py-3" />
+                    className="input-gb w-full px-4 py-3" />
                 </div>
-                <div className="relative">
-                  <DollarSign size={14} className="input-hint absolute left-3 top-1/2 -translate-y-1/2" />
+                <div>
                   <input type="number" placeholder="Max" value={form.budgetMax}
                     onChange={e => setForm({ ...form, budgetMax: e.target.value })}
-                    className="input-gb w-full pl-8 pr-3 py-3" />
+                    className="input-gb w-full px-4 py-3" />
                 </div>
               </div>
             </div>
@@ -204,16 +207,15 @@ export default function PostJobScreen() {
             {/* Deadline & Location */}
             <div className="grid grid-cols-2 gap-4">
               <div className="glass-card p-5">
-                <label className="text-white text-sm font-semibold block mb-3">Deadline</label>
-                <div className="relative">
-                  <Calendar size={14} className="input-hint absolute left-3 top-1/2 -translate-y-1/2" />
+                <label className="text-primary text-sm font-semibold block mb-3">Deadline</label>
+                <div>
                   <input type="date" value={form.deadline}
                     onChange={e => setForm({ ...form, deadline: e.target.value })}
-                    className="input-gb w-full pl-8 pr-3 py-3 text-sm" />
+                    className="input-gb w-full px-4 py-3 text-sm" />
                 </div>
               </div>
               <div className="glass-card p-5">
-                <label className="text-white text-sm font-semibold block mb-3">Work Type</label>
+                <label className="text-primary text-sm font-semibold block mb-3">Work Type</label>
                 <div className="flex gap-2">
                   <button onClick={() => setForm({ ...form, isRemote: true })}
                     className={`work-type-btn flex-1 py-2 rounded-xl text-sm transition-all ${form.isRemote ? 'active' : ''}`}>
@@ -229,7 +231,7 @@ export default function PostJobScreen() {
 
             {/* Experience Level */}
             <div className="glass-card p-5">
-              <label className="text-white text-sm font-semibold block mb-3">Experience Level</label>
+              <label className="text-primary text-sm font-semibold block mb-3">Experience Level</label>
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { value: 'entry', label: 'Entry', sub: '$10–$40/hr', emoji: '🌱' },
@@ -239,7 +241,7 @@ export default function PostJobScreen() {
                   <button key={level.value} onClick={() => setForm({ ...form, experienceLevel: level.value as any })}
                     className={`experience-level-btn p-3 rounded-xl text-center transition-all ${form.experienceLevel === level.value ? 'active' : ''}`}>
                     <span className="experience-level-emoji text-xl mb-1 block">{level.emoji}</span>
-                    <p className="text-white text-sm font-medium">{level.label}</p>
+                    <p className="text-primary text-sm font-medium">{level.label}</p>
                     <p className="experience-level-sub text-xs">{level.sub}</p>
                   </button>
                 ))}
@@ -248,10 +250,10 @@ export default function PostJobScreen() {
 
             {/* Attachments */}
             <div className="glass-card p-5">
-              <label className="text-white text-sm font-semibold block mb-3">Attachments <span className="input-hint">(optional)</span></label>
+              <label className="text-primary text-sm font-semibold block mb-3">Attachments <span className="input-hint">(optional)</span></label>
               <div className="upload-zone">
                 <Upload size={24} className="upload-icon mx-auto mb-2" />
-                <p className="upload-text text-sm font-medium text-white">Drop files here or click to upload</p>
+                <p className="upload-text text-sm font-medium text-primary">Drop files here or click to upload</p>
                 <p className="upload-hint text-xs mt-1">PDF, DOC, PNG, ZIP · Max 50MB</p>
               </div>
             </div>
@@ -262,13 +264,10 @@ export default function PostJobScreen() {
                 className="preview-btn flex items-center gap-2 px-5 py-3 rounded-xl text-sm transition-all">
                 <Eye size={16} /> Preview
               </button>
-              <button onClick={handleSubmit} disabled={isSubmitting || !form.title}
+              <button onClick={handleNextStep} disabled={!form.title || !form.category || !form.description}
                 className="btn-cyan flex-1 py-3 flex items-center justify-center gap-2 disabled:opacity-40">
-                {isSubmitting ? (
-                  <div className="w-5 h-5 rounded-full border-2 border-[#0A0F1C] border-t-transparent animate-spin" />
-                ) : (
-                  <>Post Job — AI Matching Will Begin <ChevronRight size={16} /></>
-                )}
+                Next Step: AI Interview Questions
+                <ChevronRight size={16} />
               </button>
             </div>
           </div>
@@ -281,7 +280,7 @@ export default function PostJobScreen() {
                 onClick={generateDescription}>
                 <Bot size={32} />
               </div>
-              <p className="text-white font-semibold mb-1">AI Job Generator</p>
+              <p className="text-primary font-semibold mb-1">AI Job Generator</p>
               <p className="ai-orb-description text-xs mb-4">Fill in title & category, then click the orb to generate a professional job description</p>
               <button onClick={generateDescription} disabled={isGenerating || !form.title || !form.category}
                 className="btn-cyan w-full py-2 text-sm disabled:opacity-40">
@@ -293,10 +292,10 @@ export default function PostJobScreen() {
             {showPreview && form.title && (
               <div className="glass-card p-5">
                 <p className="preview-label text-xs font-semibold mb-3">PREVIEW</p>
-                <h3 className="text-white font-semibold mb-2">{form.title || 'Job Title'}</h3>
+                <h3 className="text-primary font-semibold mb-2">{form.title || 'Job Title'}</h3>
                 {form.category && <span className="badge-cyan text-xs mb-3 inline-block">{form.category}</span>}
                 {form.budgetMin && (
-                  <p className="preview-budget text-sm text-white mb-2 font-medium">
+                  <p className="preview-budget text-sm text-primary mb-2 font-medium">
                     ${parseInt(form.budgetMin).toLocaleString()}–${parseInt(form.budgetMax || '0').toLocaleString()} · {form.jobType}
                   </p>
                 )}
@@ -313,7 +312,7 @@ export default function PostJobScreen() {
 
             {/* Tips */}
             <div className="glass-card p-5">
-              <p className="text-white text-sm font-semibold mb-3">💡 Pro Tips</p>
+              <p className="text-primary text-sm font-semibold mb-3">💡 Pro Tips</p>
               <div className="space-y-3">
                 {[
                   'Specific titles get 2x more proposals',
@@ -331,7 +330,7 @@ export default function PostJobScreen() {
 
             {/* Budget Estimator */}
             <div className="glass-card p-5">
-              <p className="text-white text-sm font-semibold mb-3">💰 Market Rate</p>
+              <p className="text-primary text-sm font-semibold mb-3">💰 Market Rate</p>
               {form.category ? (
                 <div>
                   <p className="market-rate-hint text-xs mb-2">Average for {form.category}:</p>

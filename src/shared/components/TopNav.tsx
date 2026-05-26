@@ -1,9 +1,13 @@
+import image_Frame_1_1 from '@/imports/Frame_1-1.png'
+import image_Frame_1 from '@/imports/Frame_1.png'
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router';
-import { Bell, Search, ChevronDown, Sun, Moon, LogOut, Settings, User, Zap, Menu } from 'lucide-react';
-import { useApp } from '../../app/providers/AppProvider';
-import { UserRole } from '../../types/models/User';
+import { Bell, Search, ChevronDown, LogOut, Settings, User, Zap, Menu, Wallet, DollarSign, CreditCard, TrendingUp, History, Moon, Sun, Coins } from 'lucide-react';
+import { useApp, AppTheme } from '../../app/providers/AppProvider';
 import { DB } from '../../mock_backend';
+import { ImageWithFallback } from '../../app/components/figma/ImageWithFallback';
+import { CompactLanguageSwitcher, CombinedThemeLanguageSwitcher } from './LanguageSwitcher';
+import { useTranslation } from '../../hooks/useTranslation';
 
 interface TopNavProps {
   onMenuClick?: () => void;
@@ -13,8 +17,10 @@ interface TopNavProps {
 export function TopNav({ onMenuClick, showMenuButton = false }: TopNavProps = {}) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifs, setShowNotifs] = useState(false);
+  const [showWalletMenu, setShowWalletMenu] = useState(false);
   const [searchVal, setSearchVal] = useState('');
 
   // Safely get app context - might be null for guest users
@@ -27,13 +33,16 @@ export function TopNav({ onMenuClick, showMenuButton = false }: TopNavProps = {}
 
   const user = appContext?.user || null;
   const role = appContext?.role || null;
-  const theme = appContext?.theme || 'dark';
+  const theme = appContext?.theme || 'black';
   const setRole = appContext?.setRole || (() => {});
-  const toggleTheme = appContext?.toggleTheme || (() => {});
+  const setTheme = appContext?.setTheme || (() => {});
   const logout = appContext?.logout || (() => {});
 
   const notifications = user ? DB.getNotificationsByUser(user.id) : [];
   const unreadCount = notifications.filter(n => !n.isRead).length;
+
+  // Mock wallet balance - Replace with actual API call
+  const walletBalance = 2450.50;
 
   const handleRoleSwitch = (newRole: 0 | 1) => {
     setRole(newRole);
@@ -55,38 +64,35 @@ export function TopNav({ onMenuClick, showMenuButton = false }: TopNavProps = {}
       {showMenuButton && (
         <button
           onClick={onMenuClick}
-          className="p-2 rounded-lg transition-all hover:bg-white/10"
-          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#8892A4' }}
+          className="p-2 rounded-lg transition-all hover:bg-white/10 glass-button"
           aria-label="Toggle sidebar"
         >
-          <Menu size={20} />
+          <Menu size={20} className="text-muted" />
         </button>
       )}
       
       {/* Logo */}
       <div className="flex items-center gap-2 cursor-pointer flex-shrink-0" onClick={() => navigate('/')}>
-        <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-          style={{ background: 'linear-gradient(135deg, #00F0FF, #9F4BFF)' }}>
-          <Zap size={18} className="text-[#0A0F1C]" />
-        </div>
-        <span className="text-white font-bold text-lg hidden sm:block">GigBridge</span>
-        <span className="text-xs font-bold px-1.5 py-0.5 rounded hidden sm:block"
-          style={{ background: 'rgba(0,240,255,0.12)', color: '#00F0FF', border: '1px solid rgba(0,240,255,0.25)' }}>
-          AI
-        </span>
+        <ImageWithFallback
+          src={image_Frame_1_1}
+          alt="GigBridge Logo"
+          className="w-8 h-8 rounded-lg object-cover"
+        />
+        <span className="text-primary font-bold text-lg hidden sm:block">GigBridge</span>
+        
       </div>
 
       {/* Search Bar */}
       {!isLanding && (
         <form onSubmit={handleSearch} className="flex-1 max-w-md hidden md:flex">
           <div className="relative w-full">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: '#8892A4' }} />
+            <Search size={16} className="absolute top-1/2 -translate-y-1/2 text-muted nav-search-icon" />
             <input
               type="text"
               value={searchVal}
               onChange={e => setSearchVal(e.target.value)}
               placeholder="Search jobs, freelancers, skills..."
-              className="input-gb w-full pl-9 pr-4 py-2 text-sm"
+              className="input-gb nav-search-input w-full py-2 text-sm"
             />
           </div>
         </form>
@@ -97,10 +103,7 @@ export function TopNav({ onMenuClick, showMenuButton = false }: TopNavProps = {}
         <nav className="hidden md:flex items-center gap-6 flex-1 justify-center">
           {['How It Works', 'Browse Jobs', 'Market Insights'].map(link => (
             <span key={link}
-              className="text-sm cursor-pointer transition-colors"
-              style={{ color: '#8892A4' }}
-              onMouseEnter={e => (e.currentTarget.style.color = '#00F0FF')}
-              onMouseLeave={e => (e.currentTarget.style.color = '#8892A4')}
+              className="text-sm cursor-pointer transition-colors text-secondary hover:text-cyan"
               onClick={() => {
                 if (link === 'Browse Jobs') navigate('/jobs/browse');
                 if (link === 'Market Insights') navigate('/market-insights');
@@ -114,16 +117,16 @@ export function TopNav({ onMenuClick, showMenuButton = false }: TopNavProps = {}
 
       <div className="flex items-center gap-2 ml-auto">
         {/* Role Switcher (logged in) */}
-        {user && role !== null && role !== UserRole.Admin && (
+        {user && role !== 2 && (
           <div className="role-toggle hidden sm:flex">
             <button
-              className={`role-toggle-btn ${(role as number) === 0 ? 'active' : ''}`}
+              className={`role-toggle-btn ${role === 0 ? 'active' : ''}`}
               onClick={() => handleRoleSwitch(0)}
             >
               Client
             </button>
             <button
-              className={`role-toggle-btn ${(role as number) === 1 ? 'active' : ''}`}
+              className={`role-toggle-btn ${role === 1 ? 'active' : ''}`}
               onClick={() => handleRoleSwitch(1)}
             >
               Freelancer
@@ -131,46 +134,84 @@ export function TopNav({ onMenuClick, showMenuButton = false }: TopNavProps = {}
           </div>
         )}
 
-        {/* Theme Toggle */}
-        <button
-          onClick={toggleTheme}
-          className="p-2 rounded-lg transition-all"
-          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#8892A4' }}
-        >
-          {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-        </button>
+        {/* Wallet Balance Dropdown */}
+        {user && (
+          <div className="relative">
+            <button
+              onClick={() => { setShowWalletMenu(!showWalletMenu); setShowNotifs(false); setShowUserMenu(false); }}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all glass-button"
+            >
+              <Coins size={16} className="text-amber-400" />
+              <span className="text-primary text-sm font-semibold hidden sm:block">{walletBalance.toLocaleString()}</span>
+              <ChevronDown size={14} className="text-muted" />
+            </button>
+
+            {showWalletMenu && (
+              <div className="absolute right-0 top-12 w-56 rounded-2xl p-2 z-50 dropdown-menu">
+                <div className="px-3 py-2 mb-1">
+                  <p className="text-xs text-muted">Gig Coin Balance</p>
+                  <div className="flex items-center gap-1">
+                    <Coins className="text-amber-400" size={18} />
+                    <p className="text-lg font-bold text-amber-400">{walletBalance.toLocaleString()}</p>
+                  </div>
+                </div>
+                <div className="h-px mb-1 dropdown-divider" />
+
+                <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all hover:bg-white/5 text-secondary"
+                  onClick={() => { navigate('/wallet/deposit'); setShowWalletMenu(false); }}>
+                  <Coins size={14} className="text-amber-400" />
+                  <span>Deposit Gig Coin</span>
+                </button>
+
+                <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all hover:bg-white/5 text-secondary"
+                  onClick={() => { navigate('/subscription'); setShowWalletMenu(false); }}>
+                  <CreditCard size={14} />
+                  Subscription
+                </button>
+
+                <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all hover:bg-white/5 text-secondary"
+                  onClick={() => { navigate('/financial-overview'); setShowWalletMenu(false); }}>
+                  <TrendingUp size={14} />
+                  Financial Overview
+                </button>
+
+                <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all hover:bg-white/5 text-secondary"
+                  onClick={() => { navigate('/wallet/history'); setShowWalletMenu(false); }}>
+                  <History size={14} />
+                  History
+                </button>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Notifications */}
         {user ? (
           <div className="relative">
             <button
-              onClick={() => { setShowNotifs(!showNotifs); setShowUserMenu(false); }}
-              className="p-2 rounded-lg transition-all relative"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#8892A4' }}
+              onClick={() => { setShowNotifs(!showNotifs); setShowUserMenu(false); setShowWalletMenu(false); }}
+              className="p-2 rounded-lg transition-all relative glass-button"
             >
-              <Bell size={16} />
+              <Bell size={16} className="text-muted" />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center"
-                  style={{ background: '#00F0FF', color: '#0A0F1C' }}>
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center notification-badge">
                   {unreadCount}
                 </span>
               )}
             </button>
 
             {showNotifs && (
-              <div className="absolute right-0 top-12 w-80 rounded-2xl p-3 z-50"
-                style={{ background: 'rgba(13,21,38,0.98)', border: '1px solid rgba(0,240,255,0.15)', backdropFilter: 'blur(24px)' }}>
+              <div className="absolute right-0 top-12 w-80 rounded-2xl p-3 z-50 dropdown-menu">
                 <div className="flex items-center justify-between mb-3 px-2">
-                  <p className="text-white font-semibold text-sm">Notifications</p>
-                  <button onClick={() => navigate('/notifications')} className="text-xs" style={{ color: '#00F0FF' }}>See all</button>
+                  <p className="text-primary font-semibold text-sm">Notifications</p>
+                  <button onClick={() => navigate('/notifications')} className="text-xs text-cyan">See all</button>
                 </div>
                 <div className="space-y-1 max-h-64 overflow-y-auto">
                   {notifications.slice(0, 5).map(n => (
-                    <div key={n.id} className="p-3 rounded-xl cursor-pointer transition-all"
-                      style={{ background: n.isRead ? 'transparent' : 'rgba(0,240,255,0.05)', border: n.isRead ? 'transparent' : '1px solid rgba(0,240,255,0.1)' }}
+                    <div key={n.id} className={`p-3 rounded-xl cursor-pointer transition-all ${n.isRead ? '' : 'notification-unread'}`}
                       onClick={() => { setShowNotifs(false); navigate(n.actionUrl || '/notifications'); }}>
-                      <p className="text-white text-xs font-medium">{n.title}</p>
-                      <p className="text-xs mt-0.5 line-clamp-2" style={{ color: '#8892A4' }}>{n.body}</p>
+                      <p className="text-primary text-xs font-medium">{n.title}</p>
+                      <p className="text-xs mt-0.5 line-clamp-2 text-secondary">{n.body}</p>
                     </div>
                   ))}
                 </div>
@@ -183,56 +224,74 @@ export function TopNav({ onMenuClick, showMenuButton = false }: TopNavProps = {}
         {user ? (
           <div className="relative">
             <button
-              onClick={() => { setShowUserMenu(!showUserMenu); setShowNotifs(false); }}
-              className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-xl transition-all"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+              onClick={() => { setShowUserMenu(!showUserMenu); setShowNotifs(false); setShowWalletMenu(false); }}
+              className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-xl transition-all glass-button"
             >
-              <div className="w-7 h-7 rounded-full avatar-glow flex items-center justify-center text-xs font-bold text-white"
-                style={{ background: 'linear-gradient(135deg, #00F0FF, #9F4BFF)' }}>
+              <div className="w-7 h-7 rounded-full avatar-glow flex items-center justify-center text-xs font-bold avatar-gradient">
                 {user.first_name.charAt(0)}{user.last_name.charAt(0)}
               </div>
-              <span className="text-white text-sm font-medium hidden md:block">{user.first_name}</span>
-              <ChevronDown size={14} style={{ color: '#8892A4' }} />
+              <span className="text-primary text-sm font-medium hidden md:block">{user.first_name}</span>
+              <ChevronDown size={14} className="text-muted" />
             </button>
 
             {showUserMenu && (
-              <div className="absolute right-0 top-12 w-56 rounded-2xl p-2 z-50"
-                style={{ background: 'rgba(13,21,38,0.98)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(24px)' }}>
+              <div className="absolute right-0 top-12 w-56 rounded-2xl p-2 z-50 dropdown-menu">
                 <div className="px-3 py-2 mb-1">
-                  <p className="text-white text-sm font-semibold">{user.full_name}</p>
-                  <p className="text-xs" style={{ color: '#8892A4' }}>{user.email}</p>
+                  <p className="text-primary text-sm font-semibold">{user.full_name}</p>
+                  <p className="text-xs text-secondary">{user.email}</p>
                 </div>
-                <div className="h-px mb-1" style={{ background: 'rgba(255,255,255,0.06)' }} />
+                <div className="h-px mb-1 dropdown-divider" />
 
-                {role !== null && role !== UserRole.Admin && (
+                {role !== 2 && (
                   <>
-                    <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all hover:bg-white/5"
-                      style={{ color: '#8892A4' }}
-                      onClick={() => { handleRoleSwitch((role as number) === 0 ? 1 : 0); }}>
+                    <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all hover:bg-white/5 text-secondary"
+                      onClick={() => { handleRoleSwitch(role === 0 ? 1 : 0); }}>
                       <User size={14} />
-                      Switch to {(role as number) === 0 ? 'Freelancer' : 'Client'}
+                      Switch to {role === 0 ? 'Freelancer' : 'Client'}
                     </button>
                   </>
                 )}
 
-                <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all hover:bg-white/5"
-                  style={{ color: '#8892A4' }}
+                <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all hover:bg-white/5 text-secondary"
                   onClick={() => { navigate('/settings'); setShowUserMenu(false); }}>
                   <Settings size={14} />
                   Settings
                 </button>
 
-                <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all hover:bg-white/5"
-                  style={{ color: '#8892A4' }}
-                  onClick={toggleTheme}>
-                  {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
-                  {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-                </button>
+                <div className="px-3 py-2">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Moon size={14} className="text-muted" />
+                      <span className="text-sm text-secondary">Theme</span>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setTheme('black')}
+                      className={`flex-1 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                        theme === 'black'
+                          ? 'bg-cyan/15 text-cyan border border-cyan/40'
+                          : 'glass-button text-secondary hover:bg-white/5'
+                      }`}
+                    >
+                      ⚫ Black
+                    </button>
+                    <button
+                      onClick={() => setTheme('white')}
+                      className={`flex-1 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                        theme === 'white'
+                          ? 'bg-cyan/15 text-cyan border border-cyan/40'
+                          : 'glass-button text-secondary hover:bg-white/5'
+                      }`}
+                    >
+                      ⚪ White
+                    </button>
+                  </div>
+                </div>
 
-                <div className="h-px my-1" style={{ background: 'rgba(255,255,255,0.06)' }} />
+                <div className="h-px my-1 dropdown-divider" />
 
-                <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all hover:bg-red-500/10"
-                  style={{ color: '#EF4444' }}
+                <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all hover:bg-red-500/10 logout-button"
                   onClick={() => { logout(); navigate('/'); setShowUserMenu(false); }}>
                   <LogOut size={14} />
                   Sign Out
@@ -242,22 +301,23 @@ export function TopNav({ onMenuClick, showMenuButton = false }: TopNavProps = {}
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            <button className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
-              style={{ color: '#8892A4', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+            {/* Combined Theme and Language Switcher for Guest Users */}
+            <CombinedThemeLanguageSwitcher
+              theme={theme}
+              setTheme={setTheme}
+              className="hidden sm:flex"
+            />
+            <button className="btn-cyan px-4 py-2 text-sm"
               onClick={() => navigate('/auth')}>
-              Log in
-            </button>
-            <button className="btn-cyan px-4 py-2 text-sm hidden sm:block"
-              onClick={() => navigate('/auth')}>
-              Get Started
+              {t('auth.getStarted')}
             </button>
           </div>
         )}
       </div>
 
       {/* Click outside to close menus */}
-      {(showUserMenu || showNotifs) && (
-        <div className="fixed inset-0 z-40" onClick={() => { setShowUserMenu(false); setShowNotifs(false); }} />
+      {(showUserMenu || showNotifs || showWalletMenu) && (
+        <div className="fixed inset-0 z-40" onClick={() => { setShowUserMenu(false); setShowNotifs(false); setShowWalletMenu(false); }} />
       )}
     </header>
   );

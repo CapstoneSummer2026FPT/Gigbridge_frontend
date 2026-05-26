@@ -3,38 +3,38 @@
  */
 
 .job-detail-meta {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .job-detail-icon {
-  color: #00F0FF;
+  color: var(--gb-cyan);
 }
 
 .job-detail-desc {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .job-detail-section-title {
-  color: #FFF;
+  color: var(--foreground);
 }
 
 .job-detail-list-item {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .job-detail-proposal-bg {
-  background: linear-gradient(135deg, rgba(0, 240, 255, 0.06), rgba(159, 75, 255, 0.04));
+  background: linear-gradient(135deg, rgba(0, 119, 255, 0.06), rgba(159, 75, 255, 0.04));
 }
 
 .job-detail-proposal-count {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .job-detail-client-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--gb-glass-bg);
+  border: 1px solid var(--gb-border);
 }
 
 .job-detail-star-icon {
-  color: #F59E0B;
+  color: var(--gb-amber);
 }

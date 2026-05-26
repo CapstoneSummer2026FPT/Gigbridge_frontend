@@ -2,7 +2,7 @@
 
 .app-layout {
   min-height: 100vh;
-  background: #0A0F1C;
+  background: var(--background);
 }
 
 .app-layout-content {
@@ -40,7 +40,7 @@
 /* Guest Layout */
 .guest-layout {
   min-height: 100vh;
-  background: #0A0F1C;
+  background: var(--background);
 }
 
 .guest-layout-main {
@@ -53,7 +53,8 @@
 .sidebar-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(10, 15, 28, 0.8);
+  background: var(--gb-bg-secondary);
+  opacity: 0.8;
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   z-index: 30;
@@ -73,4 +74,115 @@
   .sidebar-overlay {
     display: none;
   }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TopNav Theme-Aware Styles
+   ══════════════════════════════════════════════════════════════ */
+
+/* Logo Gradient */
+.logo-gradient {
+  background: linear-gradient(135deg, var(--gb-cyan), var(--gb-purple));
+}
+
+.white .logo-gradient {
+  background: linear-gradient(135deg, #5470EB, #9F4BFF);
+}
+
+.logo-icon {
+  color: #0A0F1C;
+}
+
+.white .logo-icon {
+  color: #FFFFFF;
+}
+
+/* Glass Button */
+.glass-button {
+  background: var(--gb-glass-bg);
+  border: 1px solid var(--gb-glass-border);
+}
+
+.white .glass-button {
+  background: rgba(84, 112, 235, 0.08);
+  border: 1px solid rgba(84, 112, 235, 0.15);
+}
+
+/* Notification Badge */
+.notification-badge {
+  background: var(--gb-cyan);
+  color: var(--gb-bg-primary);
+}
+
+.white .notification-badge {
+  background: #5470EB;
+  color: #FFFFFF;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  background: var(--gb-bg-secondary);
+  border: 1px solid var(--gb-border);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.white .dropdown-menu {
+  background: #FFFFFF;
+  border: 1px solid rgba(84, 112, 235, 0.15);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Dropdown Divider */
+.dropdown-divider {
+  background: var(--gb-border);
+}
+
+.white .dropdown-divider {
+  background: rgba(84, 112, 235, 0.1);
+}
+
+/* Notification Unread */
+.notification-unread {
+  background: rgba(0, 119, 255, 0.05);
+  border: 1px solid rgba(0, 119, 255, 0.1);
+}
+
+.white .notification-unread {
+  background: rgba(84, 112, 235, 0.05);
+  border: 1px solid rgba(84, 112, 235, 0.1);
+}
+
+/* Avatar Gradient */
+.avatar-gradient {
+  background: linear-gradient(135deg, var(--gb-cyan), var(--gb-purple));
+  color: #FFFFFF;
+}
+
+.white .avatar-gradient {
+  background: linear-gradient(135deg, #5470EB, #9F4BFF);
+  color: #FFFFFF;
+}
+
+/* Logout Button */
+.logout-button {
+  color: #EF4444;
+}
+
+.white .logout-button {
+  color: #DC2626;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TopNav Search Input - Fix Icon Overlap
+   ══════════════════════════════════════════════════════════════ */
+
+.nav-search-input {
+  padding-left: 2.5rem !important;
+  padding-right: 1rem !important;
+}
+
+.nav-search-icon {
+  left: 0.875rem;
+  pointer-events: none;
 }

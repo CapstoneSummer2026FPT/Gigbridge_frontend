@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #0A0F1C;
+  background: var(--background);
 }
 
 .not-found-content {
@@ -15,7 +15,7 @@
 .not-found-title {
   font-size: 6rem;
   font-weight: 900;
-  background: linear-gradient(135deg, #00F0FF, #9F4BFF);
+  background: linear-gradient(135deg, var(--gb-cyan), var(--gb-purple));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -23,14 +23,14 @@
 }
 
 .not-found-heading {
-  color: white;
+  color: var(--foreground);
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
 
 .not-found-text {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
   margin-bottom: 1.5rem;
 }
 
@@ -38,8 +38,8 @@
   display: inline-block;
   padding: 0.75rem 1.5rem;
   font-size: 0.875rem;
-  background: linear-gradient(135deg, #00F0FF, #00B8D4);
-  color: #0A0F1C;
+  background: linear-gradient(135deg, var(--gb-cyan), #00B8D4);
+  color: var(--primary-foreground);
   font-weight: 600;
   border-radius: 0.5rem;
   text-decoration: none;
@@ -48,7 +48,7 @@
 
 .not-found-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0, 240, 255, 0.3);
+  box-shadow: 0 8px 16px rgba(0, 119, 255, 0.3);
 }
 
 @media (max-width: 768px) {

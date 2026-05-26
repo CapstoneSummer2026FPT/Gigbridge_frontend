@@ -7,14 +7,14 @@ import { DB } from '../../../mock_backend';
 import type { ReactNode } from 'react';
 
 const NOTIF_ICONS: Record<string, ReactNode> = {
-  proposal: <Briefcase size={16} style={{ color: '#00F0FF' }} />,
-  message: <MessageSquare size={16} style={{ color: '#9F4BFF' }} />,
-  milestone: <CheckCircle size={16} style={{ color: '#22C55E' }} />,
-  payment: <DollarSign size={16} style={{ color: '#22C55E' }} />,
-  review: <Star size={16} style={{ color: '#F59E0B' }} />,
-  ai_suggestion: <Bot size={16} style={{ color: '#9F4BFF' }} />,
-  job_match: <Briefcase size={16} style={{ color: '#00F0FF' }} />,
-  system: <Bell size={16} style={{ color: '#8892A4' }} />,
+  proposal: <Briefcase size={16} className="text-cyan" />,
+  message: <MessageSquare size={16} className="text-purple" />,
+  milestone: <CheckCircle size={16} className="text-green" />,
+  payment: <DollarSign size={16} className="text-green" />,
+  review: <Star size={16} className="text-amber" />,
+  ai_suggestion: <Bot size={16} className="text-purple" />,
+  job_match: <Briefcase size={16} className="text-cyan" />,
+  system: <Bell size={16} className="text-secondary" />,
 };
 
 const CONVERSATIONS = [
@@ -47,14 +47,14 @@ export default function NotificationsScreen() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-black text-white mb-1">Inbox</h1>
-            <p style={{ color: '#8892A4' }}>
+            <h1 className="text-3xl font-black text-primary mb-1">Inbox</h1>
+            <p className="text-secondary">
               {unreadCount > 0 ? (
-                <><span style={{ color: '#00F0FF' }} className="font-semibold">{unreadCount} unread</span> notifications</>
+                <><span className="text-cyan font-semibold">{unreadCount} unread</span> notifications</>
               ) : 'All caught up!'}
             </p>
           </div>
-          <button className="text-sm transition-all" style={{ color: '#8892A4' }}>
+          <button className="text-sm transition-all text-secondary">
             Mark all as read
           </button>
         </div>
@@ -71,12 +71,12 @@ export default function NotificationsScreen() {
               style={{
                 background: activeTab === tab.id ? 'rgba(0,240,255,0.12)' : 'rgba(255,255,255,0.04)',
                 border: activeTab === tab.id ? '1px solid rgba(0,240,255,0.3)' : '1px solid rgba(255,255,255,0.08)',
-                color: activeTab === tab.id ? '#00F0FF' : '#8892A4',
+                color: activeTab === tab.id ? '#0077FF' : '#8892A4',
               }}>
               {tab.label}
               {tab.count > 0 && (
                 <span className="text-xs px-1.5 py-0.5 rounded-full font-bold"
-                  style={{ background: activeTab === tab.id ? 'rgba(0,240,255,0.2)' : 'rgba(255,255,255,0.08)', color: activeTab === tab.id ? '#00F0FF' : '#8892A4' }}>
+                  style={{ background: activeTab === tab.id ? 'rgba(0,240,255,0.2)' : 'rgba(255,255,255,0.08)', color: activeTab === tab.id ? '#0077FF' : '#8892A4' }}>
                   {tab.count}
                 </span>
               )}
@@ -104,24 +104,24 @@ export default function NotificationsScreen() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
-                        <p className="text-white font-medium text-sm">{notif.title}</p>
+                        <p className="text-primary font-medium text-sm">{notif.title}</p>
                         <div className="flex items-center gap-2 flex-shrink-0">
-                          <span className="text-xs" style={{ color: '#8892A4' }}>{timeAgo(notif.createdAt)}</span>
+                          <span className="text-xs text-secondary">{timeAgo(notif.createdAt)}</span>
                           {!notif.isRead && <div className="notif-dot" />}
                         </div>
                       </div>
-                      <p className="text-sm mt-1 leading-relaxed" style={{ color: '#8892A4' }}>{notif.body}</p>
+                      <p className="text-sm mt-1 leading-relaxed text-secondary">{notif.body}</p>
                     </div>
-                    <button className="opacity-0 group-hover:opacity-100 p-1 transition-all" style={{ color: '#8892A4' }}>
+                    <button className="opacity-0 group-hover:opacity-100 p-1 transition-all text-secondary">
                       <Trash2 size={14} />
                     </button>
                   </div>
                 ))}
                 {displayNotifs.length === 0 && (
                   <div className="text-center py-16">
-                    <Bell size={40} className="mx-auto mb-3 opacity-20" style={{ color: '#8892A4' }} />
-                    <p className="text-white font-medium">No notifications</p>
-                    <p className="text-sm mt-1" style={{ color: '#8892A4' }}>You're all caught up!</p>
+                    <Bell size={40} className="mx-auto mb-3 opacity-20 text-secondary" />
+                    <p className="text-primary font-medium">No notifications</p>
+                    <p className="text-sm mt-1 text-secondary">You're all caught up!</p>
                   </div>
                 )}
               </>
@@ -141,7 +141,7 @@ export default function NotificationsScreen() {
                     <div className="relative flex-shrink-0">
                       {conv.isAI ? (
                         <div className="w-11 h-11 rounded-xl flex items-center justify-center"
-                          style={{ background: 'linear-gradient(135deg, #00F0FF, #9F4BFF)' }}>
+                          style={{ background: 'linear-gradient(135deg, #0077FF, #9F4BFF)' }}>
                           <Bot size={18} style={{ color: '#0A0F1C' }} />
                         </div>
                       ) : (
@@ -149,17 +149,17 @@ export default function NotificationsScreen() {
                       )}
                       {conv.unread > 0 && (
                         <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold"
-                          style={{ background: '#00F0FF', color: '#0A0F1C' }}>
+                          style={{ background: '#0077FF', color: '#0A0F1C' }}>
                           {conv.unread}
                         </div>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-0.5">
-                        <p className="text-white font-semibold text-sm">{conv.name}</p>
-                        <span className="text-xs" style={{ color: '#8892A4' }}>{conv.time}</span>
+                        <p className="text-primary font-semibold text-sm">{conv.name}</p>
+                        <span className="text-xs text-secondary">{conv.time}</span>
                       </div>
-                      <p className="text-xs mb-1" style={{ color: '#8892A4' }}>Re: {conv.project}</p>
+                      <p className="text-xs mb-1 text-secondary">Re: {conv.project}</p>
                       <p className="text-sm truncate" style={{ color: conv.unread > 0 ? 'white' : '#8892A4' }}>
                         {conv.lastMsg}
                       </p>
@@ -177,10 +177,10 @@ export default function NotificationsScreen() {
               style={{ background: 'linear-gradient(135deg, rgba(159,75,255,0.08), rgba(0,240,255,0.04))', border: '1px solid rgba(159,75,255,0.2)' }}>
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-8 h-8 rounded-full flex items-center justify-center animate-orb"
-                  style={{ background: 'linear-gradient(135deg, #00F0FF, #9F4BFF)' }}>
+                  style={{ background: 'linear-gradient(135deg, #0077FF, #9F4BFF)' }}>
                   <Bot size={14} style={{ color: '#0A0F1C' }} />
                 </div>
-                <p className="text-white font-semibold text-sm">AI Suggestions</p>
+                <p className="text-primary font-semibold text-sm">AI Suggestions</p>
               </div>
               <div className="space-y-3">
                 {[
@@ -198,17 +198,17 @@ export default function NotificationsScreen() {
 
             {/* Quick Summary */}
             <div className="glass-card p-5">
-              <h2 className="text-white font-semibold mb-4 text-sm">Today's Summary</h2>
+              <h2 className="text-primary font-semibold mb-4 text-sm">Today's Summary</h2>
               <div className="space-y-3">
                 {[
-                  { label: 'New Proposals', value: '2', color: '#00F0FF' },
+                  { label: 'New Proposals', value: '2', color: '#0077FF' },
                   { label: 'Messages', value: '5', color: '#9F4BFF' },
                   { label: 'AI Matches', value: '3', color: '#22C55E' },
                   { label: 'Payments', value: '$1,500', color: '#22C55E' },
                 ].map(item => (
                   <div key={item.label} className="flex justify-between py-2 border-b"
                     style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                    <span className="text-xs" style={{ color: '#8892A4' }}>{item.label}</span>
+                    <span className="text-xs text-secondary">{item.label}</span>
                     <span className="text-sm font-bold" style={{ color: item.color }}>{item.value}</span>
                   </div>
                 ))}

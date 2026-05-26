@@ -75,10 +75,10 @@ export default function ProposalsInboxScreen() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-black text-white mb-1">
+            <h1 className="text-3xl font-black text-primary mb-1">
               {isClient ? 'Proposals Inbox' : 'My Proposals'}
             </h1>
-            <p style={{ color: '#8892A4' }}>
+            <p className="text-secondary">
               {isClient ? `${proposals.filter(p => p.status === 'pending').length} new proposals awaiting review` : `${proposals.length} proposals submitted`}
             </p>
           </div>
@@ -97,13 +97,13 @@ export default function ProposalsInboxScreen() {
             style={{ background: 'linear-gradient(135deg, rgba(159,75,255,0.06), rgba(0,240,255,0.04))', border: '1px solid rgba(159,75,255,0.2)' }}>
             <div className="flex items-center gap-2 mb-5">
               <div className="w-8 h-8 rounded-full flex items-center justify-center animate-orb"
-                style={{ background: 'linear-gradient(135deg, #00F0FF, #9F4BFF)' }}>
+                style={{ background: 'linear-gradient(135deg, #0077FF, #9F4BFF)' }}>
                 <Bot size={14} style={{ color: '#0A0F1C' }} />
               </div>
-              <h2 className="text-white font-semibold">AI Smart Talent Matching</h2>
+              <h2 className="text-primary font-semibold">AI Smart Talent Matching</h2>
               <span className="badge-purple text-xs ml-auto">Top 5 Matches</span>
             </div>
-            <p className="text-sm mb-4" style={{ color: '#8892A4' }}>
+            <p className="text-sm mb-4 text-secondary">
               Our AI analyzed 847 freelancer profiles and found these exceptional matches for your active jobs:
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
@@ -117,13 +117,13 @@ export default function ProposalsInboxScreen() {
                       <span className="match-score high text-[9px] px-1 py-0">{talent.match}%</span>
                     </div>
                   </div>
-                  <p className="text-white text-xs font-semibold">{talent.name.split(' ')[0]}</p>
-                  <p className="text-[10px] mb-1" style={{ color: '#8892A4' }}>{talent.title.split(' ').slice(0, 2).join(' ')}</p>
+                  <p className="text-primary text-xs font-semibold">{talent.name.split(' ')[0]}</p>
+                  <p className="text-[10px] mb-1 text-secondary">{talent.title.split(' ').slice(0, 2).join(' ')}</p>
                   <div className="flex items-center justify-center gap-1">
-                    <Star size={10} fill="#F59E0B" style={{ color: '#F59E0B' }} />
-                    <span className="text-[10px] text-white">{talent.rate}</span>
+                    <Star size={10} fill="#F59E0B" className="text-amber" />
+                    <span className="text-[10px] text-primary">{talent.rate}</span>
                   </div>
-                  <p className="text-xs font-bold mt-1" style={{ color: '#22C55E' }}>{talent.bid}</p>
+                  <p className="text-xs font-bold mt-1 text-green">{talent.bid}</p>
                 </div>
               ))}
             </div>
@@ -141,7 +141,7 @@ export default function ProposalsInboxScreen() {
                   style={{
                     background: filter === f ? 'rgba(0,240,255,0.12)' : 'rgba(255,255,255,0.04)',
                     border: filter === f ? '1px solid rgba(0,240,255,0.3)' : '1px solid rgba(255,255,255,0.08)',
-                    color: filter === f ? '#00F0FF' : '#8892A4',
+                    color: filter === f ? '#0077FF' : '#8892A4',
                   }}>
                   {f} {f === 'all' && `(${proposals.length})`}
                   {f !== 'all' && `(${proposals.filter(p => p.status === f).length})`}
@@ -164,18 +164,18 @@ export default function ProposalsInboxScreen() {
                         <div className="flex items-start justify-between gap-2 mb-2">
                           <div>
                             <div className="flex items-center gap-2">
-                              <p className="text-white font-semibold">{isClient ? freelancer?.name : job?.title}</p>
+                              <p className="text-primary font-semibold">{isClient ? freelancer?.name : job?.title}</p>
                               <span className={`badge-${STATUS_COLORS[proposal.status] || 'cyan'} text-[10px] capitalize`}>
                                 {proposal.status}
                               </span>
                             </div>
-                            <p className="text-xs mt-0.5" style={{ color: '#8892A4' }}>
+                            <p className="text-xs mt-0.5 text-secondary">
                               {isClient ? job?.title : `Client: ${proposal.client?.name}`}
                             </p>
                           </div>
                           <div className="text-right flex-shrink-0">
-                            <p className="text-white font-bold">${proposal.bidAmount.toLocaleString()}</p>
-                            <p className="text-xs" style={{ color: '#8892A4' }}>{proposal.deliveryDays} days</p>
+                            <p className="text-primary font-bold">${proposal.bidAmount.toLocaleString()}</p>
+                            <p className="text-xs text-secondary">{proposal.deliveryDays} days</p>
                           </div>
                         </div>
 
@@ -186,14 +186,14 @@ export default function ProposalsInboxScreen() {
                               <Bot size={10} /> {proposal.aiScore}% AI Score
                             </div>
                             {proposal.aiSummary && (
-                              <p className="text-xs truncate" style={{ color: '#8892A4' }}>
+                              <p className="text-xs truncate text-secondary">
                                 {proposal.aiSummary.slice(0, 60)}...
                               </p>
                             )}
                           </div>
                         )}
 
-                        <p className="text-sm line-clamp-2" style={{ color: '#8892A4' }}>
+                        <p className="text-sm line-clamp-2 text-secondary">
                           {proposal.coverLetter}
                         </p>
                       </div>
@@ -206,13 +206,13 @@ export default function ProposalsInboxScreen() {
                           <div className="p-3 rounded-xl mb-4"
                             style={{ background: 'rgba(159,75,255,0.06)', border: '1px solid rgba(159,75,255,0.2)' }}>
                             <div className="flex items-center gap-2 mb-2">
-                              <Bot size={12} style={{ color: '#9F4BFF' }} />
-                              <p className="text-xs font-semibold" style={{ color: '#9F4BFF' }}>AI Analysis</p>
+                              <Bot size={12} className="text-purple" />
+                              <p className="text-xs font-semibold text-purple">AI Analysis</p>
                             </div>
-                            <p className="text-xs leading-relaxed" style={{ color: '#8892A4' }}>{proposal.aiSummary}</p>
+                            <p className="text-xs leading-relaxed text-secondary">{proposal.aiSummary}</p>
                           </div>
                         )}
-                        <p className="text-sm leading-relaxed mb-4" style={{ color: '#8892A4' }}>{proposal.coverLetter}</p>
+                        <p className="text-sm leading-relaxed mb-4 text-secondary">{proposal.coverLetter}</p>
 
                         <div className="flex gap-3">
                           {isClient && proposal.status === 'pending' && (
@@ -251,9 +251,9 @@ export default function ProposalsInboxScreen() {
 
             {filteredProposals.length === 0 && (
               <div className="text-center py-16 glass-card">
-                <Users size={40} className="mx-auto mb-3 opacity-20" style={{ color: '#8892A4' }} />
-                <p className="text-white font-medium">No proposals found</p>
-                <p className="text-sm mt-1" style={{ color: '#8892A4' }}>
+                <Users size={40} className="mx-auto mb-3 opacity-20 text-secondary" />
+                <p className="text-primary font-medium">No proposals found</p>
+                <p className="text-sm mt-1 text-secondary">
                   {isClient ? 'Post a job to start receiving proposals' : 'Browse jobs and submit proposals to get started'}
                 </p>
               </div>
@@ -263,17 +263,17 @@ export default function ProposalsInboxScreen() {
           {/* Summary Sidebar */}
           <div className="space-y-5">
             <div className="glass-card p-5">
-              <h2 className="text-white font-semibold mb-4 text-sm">Summary</h2>
+              <h2 className="text-primary font-semibold mb-4 text-sm">Summary</h2>
               <div className="space-y-3">
                 {[
                   { label: 'Total Proposals', value: proposals.length, color: 'white' },
                   { label: 'Pending Review', value: proposals.filter(p => p.status === 'pending').length, color: '#F59E0B' },
-                  { label: 'Shortlisted', value: proposals.filter(p => p.status === 'shortlisted').length, color: '#00F0FF' },
+                  { label: 'Shortlisted', value: proposals.filter(p => p.status === 'shortlisted').length, color: '#0077FF' },
                   { label: 'Accepted', value: proposals.filter(p => p.status === 'accepted').length, color: '#22C55E' },
                 ].map(item => (
                   <div key={item.label} className="flex justify-between items-center py-2 border-b"
                     style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                    <span className="text-xs" style={{ color: '#8892A4' }}>{item.label}</span>
+                    <span className="text-xs text-secondary">{item.label}</span>
                     <span className="text-sm font-bold" style={{ color: item.color }}>{item.value}</span>
                   </div>
                 ))}
@@ -283,8 +283,8 @@ export default function ProposalsInboxScreen() {
             {isClient && (
               <div className="glass-card p-5"
                 style={{ background: 'rgba(0,240,255,0.04)', border: '1px solid rgba(0,240,255,0.15)' }}>
-                <p className="text-sm font-semibold text-white mb-2">🤖 AI Tip</p>
-                <p className="text-xs leading-relaxed" style={{ color: '#8892A4' }}>
+                <p className="text-sm font-semibold text-primary mb-2">🤖 AI Tip</p>
+                <p className="text-xs leading-relaxed text-secondary">
                   Proposals with AI scores above 90% have a 3x higher success rate. Consider shortlisting Alex Johnson's proposal first.
                 </p>
               </div>

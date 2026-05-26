@@ -5,52 +5,47 @@
 
 /* ── Header Section ── */
 .freelancer-dash-header-bg {
-  background: linear-gradient(135deg, rgba(0, 240, 255, 0.05), rgba(159, 75, 255, 0.05));
+  background: linear-gradient(135deg, rgba(0, 119, 255, 0.05), rgba(159, 75, 255, 0.05));
 }
 
 .freelancer-dash-greeting {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .freelancer-dash-star-icon {
-  color: #F59E0B;
+  color: var(--gb-amber);
 }
 
 .freelancer-dash-review-count {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 /* ── Charts & Stats ── */
 .freelancer-dash-chart-desc {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .freelancer-dash-chart-growth {
-  color: #22C55E;
-}
-
-/* ── Profile Strength ── */
-.freelancer-dash-profile-label {
-  color: #8892A4;
+  color: var(--gb-green);
 }
 
 /* ── Hourly Rate Card ── */
 .freelancer-dash-rate-label {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }
 
 .freelancer-dash-market-avg {
-  color: #22C55E;
+  color: var(--gb-green);
 }
 
 /* ── AI Insights ── */
 .freelancer-dash-ai-bg {
-  background: linear-gradient(135deg, rgba(159, 75, 255, 0.06), rgba(0, 240, 255, 0.04));
+  background: linear-gradient(135deg, rgba(159, 75, 255, 0.06), rgba(0, 119, 255, 0.04));
   border: 1px solid rgba(159, 75, 255, 0.2);
 }
 
 .freelancer-dash-ai-icon-bg {
-  background: linear-gradient(135deg, #00F0FF, #9F4BFF);
+  background: linear-gradient(135deg, #0077FF, #9F4BFF);
 }
 
 .freelancer-dash-ai-icon {
@@ -58,24 +53,24 @@
 }
 
 .freelancer-dash-ai-insight-card {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--gb-glass-bg);
+  border: 1px solid var(--gb-border);
 }
 
 /* ── Recommended Jobs ── */
 .freelancer-dash-jobs-icon {
-  color: #00F0FF;
+  color: var(--gb-cyan);
 }
 
 .freelancer-dash-jobs-link {
-  color: #00F0FF;
+  color: var(--gb-cyan);
 }
 
 .freelancer-dash-job-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--gb-glass-bg);
+  border: 1px solid var(--gb-border);
 }
 
 .freelancer-dash-job-meta {
-  color: #8892A4;
+  color: var(--gb-text-secondary);
 }

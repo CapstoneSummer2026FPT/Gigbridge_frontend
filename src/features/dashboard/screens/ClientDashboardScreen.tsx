@@ -25,7 +25,7 @@ const AI_SUGGESTIONS = [
 
 export default function ClientDashboardScreen() {
   const navigate = useNavigate();
-  const { user, isLoading } = useApp();
+  const { user } = useApp();
 
   const myJobs = DB.getJobsByClient(user?.id || 'u_client_1');
   const notifications = DB.getNotificationsByUser(user?.id || 'u_client_1');
@@ -41,19 +41,6 @@ export default function ClientDashboardScreen() {
     { text: 'Payment of $1,500 sent to Alex J.', time: '1d ago', type: 'payment', icon: <DollarSign size={14} className="client-dash-activity-icon-payment" /> },
   ];
 
-  if (isLoading) {
-    return (
-      <AppLayout>
-        <div className="max-w-7xl mx-auto flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mb-4"></div>
-            <p className="text-white">Loading your dashboard...</p>
-          </div>
-        </div>
-      </AppLayout>
-    );
-  }
-
   return (
     <AppLayout>
       <div className="max-w-7xl mx-auto">
@@ -61,7 +48,7 @@ export default function ClientDashboardScreen() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
             <p className="text-sm mb-1 client-dash-greeting">Good morning,</p>
-            <h1 className="text-3xl font-black text-white">{user?.name || 'Jordan'} 👋</h1>
+            <h1 className="text-3xl font-black text-primary">{user?.name || 'Jordan'} 👋</h1>
             <p className="mt-1 client-dash-greeting">You have <span className="client-dash-highlight font-semibold">{pendingProposals.length} new proposals</span> to review</p>
           </div>
           <button className="btn-cyan px-5 py-3 flex items-center gap-2 text-sm self-start md:self-auto"
@@ -88,23 +75,23 @@ export default function ClientDashboardScreen() {
           <div className="lg:col-span-2 glass-card p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-white font-semibold">Monthly Spend</h2>
+                <h2 className="text-primary font-semibold">Monthly Spend</h2>
                 <p className="text-xs mt-1 client-dash-chart-desc">Total hiring investment over time</p>
               </div>
               <span className="badge-green text-xs">↑ 32% vs last month</span>
             </div>
-            <ResponsiveContainer width="100%" height={200} key="client-spend-container">
+            <ResponsiveContainer width="100%" height={200}>
               <AreaChart data={SPEND_DATA}>
                 <defs>
                   <linearGradient id="clientSpendGrad2026" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#00F0FF" stopOpacity={0.2} />
-                    <stop offset="95%" stopColor="#00F0FF" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#0077FF" stopOpacity={0.2} />
+                    <stop offset="95%" stopColor="#0077FF" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="month" tick={{ fill: '#8892A4', fontSize: 12 }} axisLine={false} tickLine={false} interval={0} />
-                <YAxis tick={{ fill: '#8892A4', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => `$${(v/1000).toFixed(0)}k`} />
-                <Tooltip contentStyle={{ background: '#0D1526', border: '1px solid rgba(0,240,255,0.2)', borderRadius: 10, color: 'white' }} formatter={(v: number) => [`$${v.toLocaleString()}`, 'Spend']} />
-                <Area type="monotone" dataKey="spend" stroke="#00F0FF" strokeWidth={2} fill="url(#clientSpendGrad2026)" isAnimationActive={false} />
+                <XAxis key="client-xaxis" dataKey="month" tick={{ fill: '#8892A4', fontSize: 12 }} axisLine={false} tickLine={false} interval={0} />
+                <YAxis key="client-yaxis" tick={{ fill: '#8892A4', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => `$${(v/1000).toFixed(0)}k`} />
+                <Tooltip key="client-tooltip" contentStyle={{ background: '#0D1526', border: '1px solid rgba(0,240,255,0.2)', borderRadius: 10, color: 'white' }} formatter={(v: number) => [`$${v.toLocaleString()}`, 'Spend']} />
+                <Area key="client-area" type="monotone" dataKey="spend" stroke="#0077FF" strokeWidth={2} fill="url(#clientSpendGrad2026)" isAnimationActive={false} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -116,13 +103,13 @@ export default function ClientDashboardScreen() {
                 <p className="text-sm font-medium client-dash-wallet-label">Wallet Balance</p>
                 <DollarSign size={18} className="client-dash-wallet-icon" />
               </div>
-              <p className="text-3xl font-black text-white mb-1">$12,450</p>
+              <p className="text-3xl font-black text-primary mb-1">$12,450</p>
               <p className="text-xs mb-4 client-dash-wallet-desc">Available to spend</p>
               <button className="btn-cyan w-full py-2 text-sm">Add Funds</button>
             </div>
 
             <div className="glass-card p-5">
-              <p className="text-white font-semibold mb-3 text-sm">Quick Actions</p>
+              <p className="text-primary font-semibold mb-3 text-sm">Quick Actions</p>
               <div className="space-y-2">
                 {[
                   { label: 'Review Proposals', path: '/proposals', badge: `${pendingProposals.length} new`, icon: <FileText size={14} /> },
@@ -131,7 +118,7 @@ export default function ClientDashboardScreen() {
                 ].map(action => (
                   <button key={action.label} onClick={() => navigate(action.path)}
                     className="w-full flex items-center justify-between p-3 rounded-xl transition-all client-dash-action-btn">
-                    <div className="flex items-center gap-2 text-sm text-white">
+                    <div className="flex items-center gap-2 text-sm text-primary">
                       <span className="client-dash-action-icon">{action.icon}</span>
                       {action.label}
                     </div>
@@ -147,7 +134,7 @@ export default function ClientDashboardScreen() {
           {/* Active Jobs */}
           <div className="lg:col-span-2 glass-card p-6">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-white font-semibold">Active Job Postings</h2>
+              <h2 className="text-primary font-semibold">Active Job Postings</h2>
               <button className="text-sm client-dash-link-cyan" onClick={() => navigate('/jobs/my-jobs')}>View All</button>
             </div>
             <div className="space-y-3">
@@ -155,7 +142,7 @@ export default function ClientDashboardScreen() {
                 <div key={job.id} className="p-4 rounded-xl flex items-start justify-between gap-4 cursor-pointer transition-all client-dash-job-card"
                   onClick={() => navigate(`/jobs/${job.id}`)}>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-white font-medium text-sm truncate">{job.title}</h3>
+                    <h3 className="text-primary font-medium text-sm truncate">{job.title}</h3>
                     <div className="flex items-center gap-3 mt-1">
                       <span className="text-xs client-dash-job-meta">{job.proposalCount} proposals</span>
                       <span className="text-xs client-dash-job-meta">·</span>
@@ -168,7 +155,7 @@ export default function ClientDashboardScreen() {
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <p className="text-white text-sm font-semibold">${job.budgetMin.toLocaleString()}–${job.budgetMax.toLocaleString()}</p>
+                    <p className="text-primary text-sm font-semibold">${job.budgetMin.toLocaleString()}–${job.budgetMax.toLocaleString()}</p>
                     <span className="badge-green text-[10px] mt-1 block">Active</span>
                   </div>
                 </div>
@@ -178,7 +165,7 @@ export default function ClientDashboardScreen() {
 
           {/* Recent Activity */}
           <div className="glass-card p-6">
-            <h2 className="text-white font-semibold mb-5">Recent Activity</h2>
+            <h2 className="text-primary font-semibold mb-5">Recent Activity</h2>
             <div className="space-y-4">
               {recentActivity.map((a, i) => (
                 <div key={i} className="flex items-start gap-3">
@@ -186,7 +173,7 @@ export default function ClientDashboardScreen() {
                     {a.icon}
                   </div>
                   <div>
-                    <p className="text-white text-xs font-medium leading-snug">{a.text}</p>
+                    <p className="text-primary text-xs font-medium leading-snug">{a.text}</p>
                     <p className="text-xs mt-0.5 client-dash-activity-time">{a.time}</p>
                   </div>
                 </div>
@@ -200,7 +187,7 @@ export default function ClientDashboardScreen() {
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2">
               <Bot size={18} className="client-dash-ai-icon" />
-              <h2 className="text-white font-semibold">AI Job Suggestions</h2>
+              <h2 className="text-primary font-semibold">AI Job Suggestions</h2>
             </div>
             <span className="badge-purple text-xs">AI-Powered</span>
           </div>
@@ -210,7 +197,7 @@ export default function ClientDashboardScreen() {
               <div key={i} className="p-4 rounded-xl cursor-pointer transition-all client-dash-ai-card"
                 onClick={() => navigate('/jobs/post')}>
                 <div className="flex items-start justify-between gap-3 mb-3">
-                  <h3 className="text-white font-medium text-sm">{s.title}</h3>
+                  <h3 className="text-primary font-medium text-sm">{s.title}</h3>
                   <span className="match-score high text-[10px]">⚡ {s.match}</span>
                 </div>
                 <p className="text-xs mb-2 client-dash-ai-budget">Budget: {s.budget}</p>

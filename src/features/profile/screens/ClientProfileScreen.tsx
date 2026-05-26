@@ -15,7 +15,7 @@ export default function ClientProfileScreen() {
 
   const TRUST_BADGES = [
     { label: 'Identity Verified', icon: <Shield size={14} />, color: '#22C55E' },
-    { label: 'Payment Verified', icon: <CheckCircle size={14} />, color: '#00F0FF' },
+    { label: 'Payment Verified', icon: <CheckCircle size={14} />, color: '#0077FF' },
     { label: 'Top Client', icon: <Star size={14} />, color: '#F59E0B' },
     { label: 'Repeat Hirer', icon: <Users size={14} />, color: '#9F4BFF' },
   ];
@@ -29,7 +29,7 @@ export default function ClientProfileScreen() {
             style={{ background: 'linear-gradient(135deg, rgba(159,75,255,0.15), rgba(0,240,255,0.1))' }}>
             <svg className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 400 128">
               <circle cx="100" cy="64" r="60" fill="none" stroke="#9F4BFF" strokeWidth="0.5" />
-              <circle cx="300" cy="64" r="40" fill="none" stroke="#00F0FF" strokeWidth="0.5" />
+              <circle cx="300" cy="64" r="40" fill="none" stroke="#0077FF" strokeWidth="0.5" />
               <line x1="0" y1="64" x2="400" y2="64" stroke="#8892A4" strokeWidth="0.3" />
             </svg>
           </div>
@@ -39,13 +39,13 @@ export default function ClientProfileScreen() {
                 className="w-24 h-24 rounded-2xl border-4" style={{ borderColor: '#0A0F1C' }} />
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
-                  <h1 className="text-2xl font-black text-white">{user.name}</h1>
-                  {profile.isVerifiedClient && <CheckCircle size={18} style={{ color: '#00F0FF' }} />}
+                  <h1 className="text-2xl font-black text-primary">{user.name}</h1>
+                  {profile.isVerifiedClient && <CheckCircle size={18} className="text-cyan" />}
                 </div>
-                <p className="font-medium mb-1" style={{ color: '#8892A4' }}>{profile.companyName}</p>
+                <p className="font-medium mb-1 text-secondary">{profile.companyName}</p>
                 <div className="flex flex-wrap gap-3">
-                  <p className="text-sm" style={{ color: '#8892A4' }}>{profile.industry}</p>
-                  <div className="flex items-center gap-1 text-sm" style={{ color: '#8892A4' }}>
+                  <p className="text-sm text-secondary">{profile.industry}</p>
+                  <div className="flex items-center gap-1 text-sm text-secondary">
                     <MapPin size={12} /> {profile.location}
                   </div>
                   <span className="badge-cyan">Member since {profile.memberSince}</span>
@@ -57,7 +57,7 @@ export default function ClientProfileScreen() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {[
                 { label: 'Total Spent', value: `$${(profile.totalSpent / 1000).toFixed(0)}K+`, icon: <DollarSign size={14} />, color: '#22C55E' },
-                { label: 'Jobs Posted', value: profile.postedJobs, icon: <Briefcase size={14} />, color: '#00F0FF' },
+                { label: 'Jobs Posted', value: profile.postedJobs, icon: <Briefcase size={14} />, color: '#0077FF' },
                 { label: 'Freelancers Hired', value: profile.hiredFreelancers, icon: <Users size={14} />, color: '#9F4BFF' },
                 { label: 'Avg Rating Given', value: `${profile.rating}/5`, icon: <Star size={14} />, color: '#F59E0B' },
               ].map(stat => (
@@ -65,7 +65,7 @@ export default function ClientProfileScreen() {
                   style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
                   <div className="flex justify-center mb-1" style={{ color: stat.color }}>{stat.icon}</div>
                   <p className="text-lg font-black" style={{ color: stat.color }}>{stat.value}</p>
-                  <p className="text-xs" style={{ color: '#8892A4' }}>{stat.label}</p>
+                  <p className="text-xs text-secondary">{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -77,13 +77,13 @@ export default function ClientProfileScreen() {
           <div className="lg:col-span-2 space-y-5">
             {/* Bio */}
             <div className="glass-card p-6">
-              <h2 className="text-white font-semibold mb-3">About</h2>
-              <p className="text-sm leading-relaxed" style={{ color: '#8892A4' }}>{profile.bio}</p>
+              <h2 className="text-primary font-semibold mb-3">About</h2>
+              <p className="text-sm leading-relaxed text-secondary">{profile.bio}</p>
             </div>
 
             {/* Recent Job Postings */}
             <div className="glass-card p-6">
-              <h2 className="text-white font-semibold mb-4">Recent Job Postings</h2>
+              <h2 className="text-primary font-semibold mb-4">Recent Job Postings</h2>
               <div className="space-y-3">
                 {jobs.slice(0, 4).map(job => (
                   <div key={job.id}
@@ -91,10 +91,10 @@ export default function ClientProfileScreen() {
                     style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
                     onClick={() => navigate(`/jobs/${job.id}`)}>
                     <div>
-                      <p className="text-white text-sm font-medium mb-1">{job.title}</p>
+                      <p className="text-primary text-sm font-medium mb-1">{job.title}</p>
                       <div className="flex items-center gap-3">
-                        <span className="text-xs" style={{ color: '#8892A4' }}>${job.budgetMin.toLocaleString()}–${job.budgetMax.toLocaleString()}</span>
-                        <span className="text-xs" style={{ color: '#8892A4' }}>{job.proposalCount} proposals</span>
+                        <span className="text-xs text-secondary">${job.budgetMin.toLocaleString()}–${job.budgetMax.toLocaleString()}</span>
+                        <span className="text-xs text-secondary">{job.proposalCount} proposals</span>
                         <span className={`badge-${job.status === 'open' ? 'green' : 'amber'} text-[10px]`}>{job.status}</span>
                       </div>
                     </div>
@@ -112,7 +112,7 @@ export default function ClientProfileScreen() {
             {/* Trust Score */}
             <div className="glass-card p-5">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-white font-semibold text-sm">Trust Score</h2>
+                <h2 className="text-primary font-semibold text-sm">Trust Score</h2>
               </div>
               <div className="flex items-center gap-3 mb-3">
                 <div className="relative">
@@ -123,32 +123,32 @@ export default function ClientProfileScreen() {
                       strokeLinecap="round" transform="rotate(-90 30 30)" />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-xs font-bold text-white">{profile.trustScore}%</span>
+                    <span className="text-xs font-bold text-primary">{profile.trustScore}%</span>
                   </div>
                 </div>
                 <div>
-                  <p className="text-white text-sm font-semibold">Excellent</p>
-                  <p className="text-xs" style={{ color: '#22C55E' }}>Top 10% Client</p>
+                  <p className="text-primary text-sm font-semibold">Excellent</p>
+                  <p className="text-xs text-green">Top 10% Client</p>
                 </div>
               </div>
               <div className="flex items-center gap-1">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} size={12} fill={i < Math.floor(profile.rating) ? '#F59E0B' : 'none'} style={{ color: '#F59E0B' }} />
+                  <Star key={i} size={12} fill={i < Math.floor(profile.rating) ? '#F59E0B' : 'none'} className="text-amber" />
                 ))}
-                <span className="text-xs text-white ml-1">{profile.rating}</span>
-                <span className="text-xs ml-1" style={{ color: '#8892A4' }}>({profile.reviewCount})</span>
+                <span className="text-xs text-primary ml-1">{profile.rating}</span>
+                <span className="text-xs ml-1 text-secondary">({profile.reviewCount})</span>
               </div>
             </div>
 
             {/* Trust Badges */}
             <div className="glass-card p-5">
-              <h2 className="text-white font-semibold mb-4 text-sm">Verified Badges</h2>
+              <h2 className="text-primary font-semibold mb-4 text-sm">Verified Badges</h2>
               <div className="space-y-2">
                 {TRUST_BADGES.map(badge => (
                   <div key={badge.label} className="flex items-center gap-2 p-2 rounded-lg"
                     style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
                     <span style={{ color: badge.color }}>{badge.icon}</span>
-                    <span className="text-sm text-white">{badge.label}</span>
+                    <span className="text-sm text-primary">{badge.label}</span>
                     <CheckCircle size={12} className="ml-auto" style={{ color: badge.color }} />
                   </div>
                 ))}

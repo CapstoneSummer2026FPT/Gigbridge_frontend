@@ -7,6 +7,9 @@ import '../styles/fonts.css';
 import '../shared/styles/glass-effects.css';
 import '../shared/styles/AppLayout.css';
 
+// Import i18n configuration (must be imported before any component that uses translations)
+import '../i18n';
+
 /**
  * GigBridge App - AI-Powered Freelance Marketplace
  * Version: 1.0.5

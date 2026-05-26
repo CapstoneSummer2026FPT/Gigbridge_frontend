@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { Video, VideoOff, Mic, MicOff, Bot, ChevronRight, Star, CheckCircle, BarChart2, Clock } from 'lucide-react';
 import { AppLayout } from '../../../shared/components/AppLayout';
 import { useApp } from '../../../app/providers/AppProvider';
+import '../styles/ai-interview-screen.css';
 
 type InterviewStage = 'intro' | 'interview' | 'results';
 
@@ -90,38 +91,36 @@ export default function AIInterviewScreen() {
   const waveformHeights = [0.3, 0.7, 0.4, 1.0, 0.6, 0.8, 0.3, 0.5, 0.9, 0.4, 0.7, 0.6, 0.8, 0.4, 0.5, 0.9, 0.3, 0.7];
 
   return (
-    <AppLayout fullWidth>
-      <div className="min-h-[calc(100vh-4rem)] flex flex-col" style={{ background: '#0A0F1C' }}>
+    <AppLayout>
+      <div className="min-h-[calc(100vh-8rem)] flex flex-col">
 
         {/* Intro Stage */}
         {stage === 'intro' && (
           <div className="flex-1 flex items-center justify-center p-6">
             <div className="max-w-2xl w-full text-center">
-              <div className="w-24 h-24 rounded-full mx-auto mb-6 flex items-center justify-center animate-orb"
-                style={{ background: 'radial-gradient(circle at 30% 30%, rgba(159,75,255,0.9), rgba(0,240,255,0.7))' }}>
-                <Video size={40} style={{ color: '#0A0F1C' }} />
+              <div className="w-24 h-24 rounded-full mx-auto mb-6 flex items-center justify-center animate-orb bg-gradient-to-br from-purple to-cyan">
+                <Video size={40} className="text-background" />
               </div>
-              <h1 className="text-4xl font-black text-white mb-4">AI Instant Interview</h1>
-              <p className="text-lg mb-8" style={{ color: '#8892A4' }}>
+              <h1 className="text-4xl font-black text-primary mb-4">AI Instant Interview</h1>
+              <p className="text-lg mb-8 text-secondary">
                 Our AI will conduct a structured interview, analyze your responses in real-time,
                 and provide clients with a detailed suitability report.
               </p>
 
               <div className="glass-card p-6 mb-8 text-left">
-                <h2 className="text-white font-semibold mb-4">What to Expect</h2>
+                <h2 className="text-primary font-semibold mb-4">What to Expect</h2>
                 <div className="space-y-3">
                   {[
-                    { step: '1', text: `${QUESTIONS.length} questions across technical, behavioral & situational categories`, color: '#00F0FF' },
-                    { step: '2', text: 'Real-time AI transcription and sentiment analysis', color: '#9F4BFF' },
-                    { step: '3', text: 'Instant suitability score and detailed feedback report', color: '#22C55E' },
-                    { step: '4', text: 'Interview shared with potential clients automatically', color: '#F59E0B' },
+                    { step: '1', text: `${QUESTIONS.length} questions across technical, behavioral & situational categories`, colorClass: 'cyan' },
+                    { step: '2', text: 'Real-time AI transcription and sentiment analysis', colorClass: 'purple' },
+                    { step: '3', text: 'Instant suitability score and detailed feedback report', colorClass: 'green' },
+                    { step: '4', text: 'Interview shared with potential clients automatically', colorClass: 'amber-400' },
                   ].map(item => (
                     <div key={item.step} className="flex items-center gap-3">
-                      <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
-                        style={{ background: item.color + '20', border: `1px solid ${item.color}40` }}>
-                        <span className="text-xs font-bold" style={{ color: item.color }}>{item.step}</span>
+                      <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 bg-${item.colorClass}/10 border border-${item.colorClass}/40`}>
+                        <span className={`text-xs font-bold text-${item.colorClass}`}>{item.step}</span>
                       </div>
-                      <p className="text-sm" style={{ color: '#8892A4' }}>{item.text}</p>
+                      <p className="text-sm text-secondary">{item.text}</p>
                     </div>
                   ))}
                 </div>
@@ -129,12 +128,12 @@ export default function AIInterviewScreen() {
 
               <div className="grid grid-cols-2 gap-4 mb-8">
                 <div className="glass-card p-4 text-center">
-                  <p className="text-2xl font-black" style={{ color: '#00F0FF' }}>~8 min</p>
-                  <p className="text-xs mt-1" style={{ color: '#8892A4' }}>Average Duration</p>
+                  <p className="text-2xl font-black text-cyan">~8 min</p>
+                  <p className="text-xs mt-1 text-secondary">Average Duration</p>
                 </div>
                 <div className="glass-card p-4 text-center">
-                  <p className="text-2xl font-black" style={{ color: '#22C55E' }}>94%</p>
-                  <p className="text-xs mt-1" style={{ color: '#8892A4' }}>Candidate Satisfaction</p>
+                  <p className="text-2xl font-black text-green">94%</p>
+                  <p className="text-xs mt-1 text-secondary">Candidate Satisfaction</p>
                 </div>
               </div>
 
@@ -153,33 +152,30 @@ export default function AIInterviewScreen() {
             <div className="flex items-center gap-4 mb-4">
               <div className="flex gap-2 flex-1">
                 {QUESTIONS.map((_, i) => (
-                  <div key={i} className="flex-1 h-1.5 rounded-full transition-all"
-                    style={{ background: i < currentQuestion ? '#22C55E' : i === currentQuestion ? '#9F4BFF' : 'rgba(255,255,255,0.1)' }} />
+                  <div key={i} className={`flex-1 h-1.5 rounded-full transition-all ${
+                    i < currentQuestion ? 'bg-green' : i === currentQuestion ? 'bg-purple' : 'bg-border'
+                  }`} />
                 ))}
               </div>
-              <span className="text-sm text-white font-semibold">Q{currentQuestion + 1}/{QUESTIONS.length}</span>
-              <div className="flex items-center gap-1 px-3 py-1 rounded-full"
-                style={{ background: timeLeft < 30 ? 'rgba(239,68,68,0.15)' : 'rgba(0,240,255,0.1)', border: `1px solid ${timeLeft < 30 ? 'rgba(239,68,68,0.3)' : 'rgba(0,240,255,0.25)'}` }}>
-                <Clock size={12} style={{ color: timeLeft < 30 ? '#EF4444' : '#00F0FF' }} />
-                <span className="text-xs font-bold" style={{ color: timeLeft < 30 ? '#EF4444' : '#00F0FF' }}>{formatTime(timeLeft)}</span>
+              <span className="text-sm text-primary font-semibold">Q{currentQuestion + 1}/{QUESTIONS.length}</span>
+              <div className={`flex items-center gap-1 px-3 py-1 rounded-full ${timeLeft < 30 ? 'bg-red-500/15 border border-red-500/30' : 'bg-cyan/10 border border-cyan/25'}`}>
+                <Clock size={12} className={timeLeft < 30 ? 'text-red-500' : 'text-cyan'} />
+                <span className={`text-xs font-bold ${timeLeft < 30 ? 'text-red-500' : 'text-cyan'}`}>{formatTime(timeLeft)}</span>
               </div>
             </div>
 
             <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4">
               {/* AI Avatar Feed */}
-              <div className="video-frame video-frame-ai flex flex-col">
+              <div className="glass-card flex flex-col overflow-hidden">
                 {/* AI Video */}
-                <div className="flex-1 relative flex items-center justify-center p-8"
-                  style={{ background: 'linear-gradient(135deg, #0D1526, #1a0b2e)' }}>
+                <div className="flex-1 relative flex items-center justify-center p-8 bg-gradient-to-br from-purple/10 to-cyan/10">
                   {/* Animated AI avatar */}
                   <div className="relative">
-                    <div className={`w-32 h-32 rounded-full flex items-center justify-center ${isAISpeaking ? 'animate-orb' : ''}`}
-                      style={{ background: 'radial-gradient(circle at 35% 35%, rgba(159,75,255,1), rgba(0,240,255,0.8))' }}>
-                      <Bot size={56} style={{ color: '#0A0F1C' }} />
+                    <div className={`w-32 h-32 rounded-full flex items-center justify-center ${isAISpeaking ? 'animate-orb' : ''} bg-gradient-to-br from-purple to-cyan`}>
+                      <Bot size={56} className="text-background" />
                     </div>
                     {isAISpeaking && (
-                      <div className="absolute -inset-4 rounded-full border-2 animate-ping"
-                        style={{ borderColor: 'rgba(159,75,255,0.3)' }} />
+                      <div className="absolute -inset-4 rounded-full border-2 border-purple/30 animate-ping" />
                     )}
                   </div>
 
@@ -194,11 +190,10 @@ export default function AIInterviewScreen() {
                   )}
 
                   {/* AI Label */}
-                  <div className="absolute top-3 left-3 flex items-center gap-2 px-3 py-1.5 rounded-full"
-                    style={{ background: 'rgba(159,75,255,0.2)', border: '1px solid rgba(159,75,255,0.4)' }}>
-                    <Bot size={12} style={{ color: '#9F4BFF' }} />
-                    <span className="text-xs font-medium text-white">GigBridge AI Interviewer</span>
-                    <div className="notif-dot" style={{ background: '#9F4BFF', boxShadow: '0 0 8px rgba(159,75,255,0.8)' }} />
+                  <div className="absolute top-3 left-3 flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple/20 border border-purple/40">
+                    <Bot size={12} className="text-purple" />
+                    <span className="text-xs font-medium text-primary">GigBridge AI Interviewer</span>
+                    <div className="w-2 h-2 rounded-full bg-purple animate-pulse" />
                   </div>
                 </div>
 
@@ -209,7 +204,7 @@ export default function AIInterviewScreen() {
                       {QUESTIONS[currentQuestion].category}
                     </span>
                   </div>
-                  <p className="text-white text-sm font-medium leading-relaxed">
+                  <p className="text-primary text-sm font-medium leading-relaxed">
                     {QUESTIONS[currentQuestion].question}
                   </p>
                 </div>
@@ -218,33 +213,32 @@ export default function AIInterviewScreen() {
               {/* Candidate Feed + Transcription */}
               <div className="flex flex-col gap-4">
                 {/* Candidate Video */}
-                <div className="video-frame flex-1 relative flex items-center justify-center"
-                  style={{ background: 'linear-gradient(135deg, #0D1526, #111827)', minHeight: 180 }}>
+                <div className="glass-card flex-1 relative flex items-center justify-center bg-gradient-to-br from-surface to-background min-h-[180px]">
                   {isCameraOn ? (
-                    <div className="w-20 h-20 rounded-full flex items-center justify-center"
-                      style={{ background: 'rgba(255,255,255,0.1)' }}>
+                    <div className="w-20 h-20 rounded-full flex items-center justify-center bg-surface">
                       <img src={user?.avatar} alt="" className="w-20 h-20 rounded-full" />
                     </div>
                   ) : (
-                    <VideoOff size={32} style={{ color: '#8892A4' }} />
+                    <VideoOff size={32} className="text-secondary" />
                   )}
 
-                  <div className="absolute top-3 left-3 flex items-center gap-2 px-3 py-1.5 rounded-full"
-                    style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                    <span className="text-xs text-white">{user?.name || 'You'}</span>
+                  <div className="absolute top-3 left-3 flex items-center gap-2 px-3 py-1.5 rounded-full bg-background/50 border border-border">
+                    <span className="text-xs text-primary">{user?.full_name || 'You'}</span>
                   </div>
 
                   {/* Controls */}
                   <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3">
                     <button onClick={() => setIsMicOn(!isMicOn)}
-                      className="w-10 h-10 rounded-full flex items-center justify-center transition-all"
-                      style={{ background: isMicOn ? 'rgba(0,240,255,0.2)' : 'rgba(239,68,68,0.3)', border: `1px solid ${isMicOn ? 'rgba(0,240,255,0.4)' : 'rgba(239,68,68,0.5)'}` }}>
-                      {isMicOn ? <Mic size={14} style={{ color: '#00F0FF' }} /> : <MicOff size={14} style={{ color: '#EF4444' }} />}
+                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                        isMicOn ? 'bg-cyan/20 border border-cyan/40' : 'bg-red-500/30 border border-red-500/50'
+                      }`}>
+                      {isMicOn ? <Mic size={14} className="text-cyan" /> : <MicOff size={14} className="text-red-500" />}
                     </button>
                     <button onClick={() => setIsCameraOn(!isCameraOn)}
-                      className="w-10 h-10 rounded-full flex items-center justify-center transition-all"
-                      style={{ background: isCameraOn ? 'rgba(0,240,255,0.2)' : 'rgba(239,68,68,0.3)', border: `1px solid ${isCameraOn ? 'rgba(0,240,255,0.4)' : 'rgba(239,68,68,0.5)'}` }}>
-                      {isCameraOn ? <Video size={14} style={{ color: '#00F0FF' }} /> : <VideoOff size={14} style={{ color: '#EF4444' }} />}
+                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                        isCameraOn ? 'bg-cyan/20 border border-cyan/40' : 'bg-red-500/30 border border-red-500/50'
+                      }`}>
+                      {isCameraOn ? <Video size={14} className="text-cyan" /> : <VideoOff size={14} className="text-red-500" />}
                     </button>
                   </div>
                 </div>
@@ -253,10 +247,10 @@ export default function AIInterviewScreen() {
                 <div className="glass-card p-4 flex-1">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="notif-dot" />
-                    <p className="text-xs font-semibold text-white">Live Transcription</p>
+                    <p className="text-xs font-semibold text-primary">Live Transcription</p>
                     <span className="badge-cyan text-[10px] ml-auto">AI Powered</span>
                   </div>
-                  <p className="text-sm leading-relaxed" style={{ color: '#8892A4' }}>
+                  <p className="text-sm leading-relaxed text-secondary">
                     {transcription || <span className="opacity-50 italic">Listening for your answer...</span>}
                     {transcription && <span className="animate-blink">|</span>}
                   </p>
@@ -280,22 +274,21 @@ export default function AIInterviewScreen() {
           <div className="flex-1 flex items-center justify-center p-6">
             <div className="max-w-3xl w-full">
               <div className="text-center mb-8">
-                <div className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center"
-                  style={{ background: 'rgba(34,197,94,0.2)', border: '2px solid #22C55E' }}>
-                  <CheckCircle size={36} style={{ color: '#22C55E' }} />
+                <div className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center bg-green/20 border-2 border-green">
+                  <CheckCircle size={36} className="text-green" />
                 </div>
-                <h1 className="text-3xl font-black text-white mb-2">Interview Complete!</h1>
-                <p style={{ color: '#8892A4' }}>Your AI interview has been processed. Here's your performance summary:</p>
+                <h1 className="text-3xl font-black text-primary mb-2">Interview Complete!</h1>
+                <p className="text-secondary">Your AI interview has been processed. Here's your performance summary:</p>
               </div>
 
               {/* Score */}
               <div className="glass-card neon-border-green p-8 mb-6 text-center">
-                <p className="text-sm mb-2" style={{ color: '#8892A4' }}>Overall Suitability Score</p>
-                <p className="text-7xl font-black mb-2" style={{ color: '#22C55E' }}>{overallScore}%</p>
-                <p className="text-lg text-white font-semibold">Excellent Candidate</p>
+                <p className="text-sm mb-2 text-secondary">Overall Suitability Score</p>
+                <p className="text-7xl font-black mb-2 text-green">{overallScore}%</p>
+                <p className="text-lg text-primary font-semibold">Excellent Candidate</p>
                 <div className="flex items-center justify-center gap-1 mt-2">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} size={18} fill={i < 5 ? '#F59E0B' : 'none'} style={{ color: '#F59E0B' }} />
+                    <Star key={i} size={18} fill={i < 5 ? '#F59E0B' : 'none'} className="text-amber" />
                   ))}
                 </div>
               </div>
@@ -306,22 +299,21 @@ export default function AIInterviewScreen() {
                   const score = 75 + Math.floor(Math.random() * 25);
                   return (
                     <div key={cat} className="glass-card p-4 text-center">
-                      <BarChart2 size={20} className="mx-auto mb-2" style={{ color: '#00F0FF' }} />
-                      <p className="text-xl font-black text-white">{score}%</p>
-                      <p className="text-xs mt-1" style={{ color: '#8892A4' }}>{cat}</p>
+                      <BarChart2 size={20} className="mx-auto mb-2 text-cyan" />
+                      <p className="text-xl font-black text-primary">{score}%</p>
+                      <p className="text-xs mt-1 text-secondary">{cat}</p>
                     </div>
                   );
                 })}
               </div>
 
               {/* AI Summary */}
-              <div className="glass-card p-6 mb-6"
-                style={{ background: 'rgba(0,240,255,0.04)', border: '1px solid rgba(0,240,255,0.15)' }}>
+              <div className="glass-card p-6 mb-6 bg-cyan/5 border border-cyan/15">
                 <div className="flex items-center gap-2 mb-3">
-                  <Bot size={16} style={{ color: '#9F4BFF' }} />
-                  <p className="text-white font-semibold">AI Assessment Summary</p>
+                  <Bot size={16} className="text-purple" />
+                  <p className="text-primary font-semibold">AI Assessment Summary</p>
                 </div>
-                <p className="text-sm leading-relaxed" style={{ color: '#8892A4' }}>
+                <p className="text-sm leading-relaxed text-secondary">
                   The candidate demonstrates strong technical proficiency in React and modern frontend development.
                   Communication is clear and articulate, with excellent ability to structure technical explanations.
                   Problem-solving approach is methodical and shows deep understanding of performance optimization.

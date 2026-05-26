@@ -1,0 +1,248 @@
+/**
+ * Admin Users Screen Styles
+ * Styles for user management with white theme support
+ */
+
+/* ══════════════════════════════════════════════════════════════
+   Table Styles
+   ══════════════════════════════════════════════════════════════ */
+
+table {
+  border-collapse: collapse;
+}
+
+table thead tr {
+  background: var(--gb-bg-secondary);
+}
+
+.white table thead tr {
+  background: rgba(84, 112, 235, 0.03);
+}
+
+table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.white table tbody tr:hover {
+  background: rgba(84, 112, 235, 0.05);
+}
+
+table th,
+table td {
+  white-space: nowrap;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Icon Colors
+   ══════════════════════════════════════════════════════════════ */
+
+.icon-cyan {
+  color: var(--gb-cyan);
+}
+
+.white .icon-cyan {
+  color: #5470EB;
+}
+
+.icon-purple {
+  color: var(--gb-purple);
+}
+
+.icon-green {
+  color: var(--gb-green);
+}
+
+.icon-amber {
+  color: var(--gb-amber);
+}
+
+.icon-red {
+  color: #EF4444;
+}
+
+.white .icon-red {
+  color: #DC2626;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Filter Buttons
+   ══════════════════════════════════════════════════════════════ */
+
+.bg-cyan {
+  background: rgba(0, 119, 255, 0.15);
+  border-color: rgba(0, 119, 255, 0.4);
+}
+
+.white .bg-cyan {
+  background: rgba(84, 112, 235, 0.12);
+  border-color: rgba(84, 112, 235, 0.3);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   User Avatar Gradient
+   ══════════════════════════════════════════════════════════════ */
+
+.from-cyan {
+  --tw-gradient-from: var(--gb-cyan);
+  --tw-gradient-to: rgb(0 240 255 / 0);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.to-purple {
+  --tw-gradient-to: var(--gb-purple);
+}
+
+.white .from-cyan {
+  --tw-gradient-from: #5470EB;
+  --tw-gradient-to: rgb(84 112 235 / 0);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.bg-gradient-to-br {
+  background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Modal Overlay
+   ══════════════════════════════════════════════════════════════ */
+
+.backdrop-blur-sm {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Responsive Table
+   ══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  table {
+    font-size: 0.875rem;
+  }
+
+  table th,
+  table td {
+    padding: 0.75rem 0.5rem;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Status Colors
+   ══════════════════════════════════════════════════════════════ */
+
+.text-green {
+  color: var(--gb-green);
+}
+
+.text-red {
+  color: #EF4444;
+}
+
+.white .text-red {
+  color: #DC2626;
+}
+
+.text-cyan {
+  color: var(--gb-cyan);
+}
+
+.white .text-cyan {
+  color: #5470EB;
+}
+
+.text-purple {
+  color: var(--gb-purple);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Hover Effects
+   ══════════════════════════════════════════════════════════════ */
+
+.hover\:bg-cyan\/10:hover {
+  background: rgba(0, 119, 255, 0.1);
+}
+
+.white .hover\:bg-cyan\/10:hover {
+  background: rgba(84, 112, 235, 0.1);
+}
+
+.hover\:bg-purple\/10:hover {
+  background: rgba(159, 75, 255, 0.1);
+}
+
+.hover\:bg-red-500\/10:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.white .hover\:bg-red-500\/10:hover {
+  background: rgba(220, 38, 38, 0.1);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Role Action Buttons
+   ══════════════════════════════════════════════════════════════ */
+
+.bg-cyan\/20 {
+  background: rgba(0, 119, 255, 0.2);
+}
+
+.white .bg-cyan\/20 {
+  background: rgba(84, 112, 235, 0.2);
+}
+
+.bg-green\/20 {
+  background: rgba(34, 197, 94, 0.2);
+}
+
+.bg-red\/20 {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.white .bg-red\/20 {
+  background: rgba(220, 38, 38, 0.2);
+}
+
+.hover\:bg-green\/30:hover {
+  background: rgba(34, 197, 94, 0.3);
+}
+
+.hover\:bg-red\/30:hover {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+.white .hover\:bg-red\/30:hover {
+  background: rgba(220, 38, 38, 0.3);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Divider
+   ══════════════════════════════════════════════════════════════ */
+
+.divide-y > :not([hidden]) ~ :not([hidden]) {
+  border-top-width: 1px;
+  border-color: var(--gb-border);
+}
+
+.white .divide-y > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgba(84, 112, 235, 0.1);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Text Utilities
+   ══════════════════════════════════════════════════════════════ */
+
+.text-muted {
+  color: var(--gb-text-muted);
+}
+
+.text-secondary {
+  color: var(--gb-text-secondary);
+}
+
+.text-primary {
+  color: var(--gb-text-primary);
+}
