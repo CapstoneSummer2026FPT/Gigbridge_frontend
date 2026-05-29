@@ -23,7 +23,7 @@ interface AppContextValue {
   setRole: (role: UserRole) => void;
   setTheme: (theme: AppTheme) => void;
   toggleTheme: () => void;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<UserRole>;
   signup: (email: string, password: string, firstName: string, lastName: string, role: UserRole) => Promise<void>;
   logout: () => void;
   completeOnboarding: (profileData: any) => Promise<void>;
@@ -139,7 +139,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setThemeState(prev => prev === 'black' ? 'white' : 'black');
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string): Promise<UserRole> => {
     setIsLoading(true);
     try {
       const result = await authHandlers.login({ email, password });
@@ -166,6 +166,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         console.warn('Could not load profile:', profileErr);
         // Profile might not exist yet for new users
       }
+      return result.user.role;
     } catch (error) {
       console.error('Login error:', error);
       throw error;

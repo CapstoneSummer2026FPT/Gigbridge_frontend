@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Mail, Lock, User, Eye, EyeOff, ArrowRight, Zap, Bot, Star, CheckCircle } from 'lucide-react';
 import { useApp } from '../../../app/providers/AppProvider';
+import { UserRole } from '../../../types/models/User';
 import '../styles/auth-screen.css';
 
 type AuthMode = 'login' | 'register';
@@ -27,7 +28,7 @@ export default function AuthScreen() {
     appContext = null;
   }
 
-  const login = appContext?.login || (async () => {});
+  const login = appContext?.login || (async () => undefined);
   const signup = appContext?.signup || (async () => {});
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,9 +38,16 @@ export default function AuthScreen() {
 
     try {
       if (mode === 'login') {
-        await login(formData.email, formData.password);
-        // AppProvider will redirect based on profile completion
-        navigate('/');
+        const role = await login(formData.email, formData.password);
+        if (role === UserRole.Client) {
+          navigate('/client/dashboard');
+        } else if (role === UserRole.Freelancer) {
+          navigate('/freelancer/dashboard');
+        } else if (role === UserRole.Admin) {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
       } else {
         // After signup, go to role selection
         navigate('/onboarding/role-selection');
@@ -64,13 +72,22 @@ export default function AuthScreen() {
       
       await login(demoCredentials[demoRole], 'demo');
       
-      // Navigate to appropriate dashboard after successful login
-      if (demoRole === 'client') {
-        navigate('/client/dashboard');
-      } else if (demoRole === 'freelancer') {
-        navigate('/freelancer/dashboard');
+      // Navigate dynamically based on role stored in gigbridge_user
+      const gigbridgeUserStr = localStorage.getItem('gigbridge_user');
+      if (gigbridgeUserStr) {
+        const user = JSON.parse(gigbridgeUserStr);
+        const role = user.role; // 0 = Client, 1 = Freelancer, 2 = Admin
+        if (role === 0) {
+          navigate('/client/dashboard');
+        } else if (role === 1) {
+          navigate('/freelancer/dashboard');
+        } else if (role === 2) {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
       } else {
-        navigate('/admin');
+        navigate('/');
       }
     } catch (err: any) {
       console.error('Demo login failed:', err);
