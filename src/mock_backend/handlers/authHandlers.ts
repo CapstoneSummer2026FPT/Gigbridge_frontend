@@ -1,18 +1,11 @@
 import DB from '../database/db';
 import type { User, UserRole } from '../../types/models/User';
 import type { ClientProfile, FreelancerProfile } from '../../types/models/Profile';
-import type { LoginResponseDTO, UserDTO } from '../../types/models/Auth/Login';
+import type { LoginResponse, UserDTO } from '../../types/models/Auth';
+import type { ApiResponse } from '../../types/models/common';
 
 export interface LoginPayload { email: string; password: string; }
 export interface LoginResult { user: User; token: string; }
-
-interface ApiResponse<T> {
-  success: boolean;
-  statusCode: number;
-  message: string;
-  data: T;
-  errors: any;
-}
 
 function sanitizeErrorMessage(error: any): string {
   if (typeof error === 'string') return error;
@@ -73,7 +66,7 @@ export const authHandlers = {
         throw new Error(errorMsg);
       }
 
-      const result: ApiResponse<LoginResponseDTO> = await res.json();
+      const result: ApiResponse<LoginResponse> = await res.json();
 
       if (!result.success) {
         throw new Error(result.message || "Login failed");
