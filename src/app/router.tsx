@@ -40,6 +40,7 @@ import WalletDepositScreen from '../features/wallet/screens/WalletDepositScreen'
 import SubscriptionScreen from '../features/wallet/screens/SubscriptionScreen';
 import FinancialOverviewScreen from '../features/wallet/screens/FinancialOverviewScreen';
 import WalletHistoryScreen from '../features/wallet/screens/WalletHistoryScreen';
+import BuyGigcoinScreen from '../features/wallet/screens/BuyGigcoinScreen';
 
 // Import router styles
 import './styles/router.css';
@@ -120,6 +121,7 @@ export const router = createBrowserRouter([
       // Wallet & Subscription
       { path: 'wallet/deposit', element: <WalletDepositScreen /> },
       { path: 'wallet/history', element: <WalletHistoryScreen /> },
+      { path: 'buy-gigcoin', element: <BuyGigcoinScreen /> },
       { path: 'subscription', element: <SubscriptionScreen /> },
       { path: 'financial-overview', element: <FinancialOverviewScreen /> },
 
