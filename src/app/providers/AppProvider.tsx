@@ -66,9 +66,22 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
     const initApp = async () => {
       try {
+        let savedUser = null;
+        let savedRole = null;
+
         const sessionData = localStorage.getItem('gigbridge_session');
+        const gigbridgeUserData = localStorage.getItem('gigbridge_user');
+
         if (sessionData) {
-          const { user: savedUser, role: savedRole } = JSON.parse(sessionData);
+          const parsed = JSON.parse(sessionData);
+          savedUser = parsed.user;
+          savedRole = parsed.role;
+        } else if (gigbridgeUserData) {
+          savedUser = JSON.parse(gigbridgeUserData);
+          savedRole = savedUser?.role;
+        }
+
+        if (savedUser) {
           setUser(savedUser);
           setRoleState(savedRole);
 
@@ -85,6 +98,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         }
       } catch (_e) {
         localStorage.removeItem('gigbridge_session');
+        localStorage.removeItem('gigbridge_user');
+        localStorage.removeItem('access_token');
       } finally {
         setIsLoading(false);
       }
@@ -131,11 +146,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setUser(result.user);
       setRoleState(result.user.role);
       
-      // Save session
+      // Save session tokens and user data
       localStorage.setItem('gigbridge_session', JSON.stringify({
         user: result.user,
         role: result.user.role
       }));
+      localStorage.setItem('access_token', result.token);
+      localStorage.setItem('gigbridge_user', JSON.stringify(result.user));
 
       // Load profile based on role
       try {
@@ -180,6 +197,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setClientProfile(null);
     setFreelancerProfile(null);
     localStorage.removeItem('gigbridge_session');
+    localStorage.removeItem('gigbridge_user');
+    localStorage.removeItem('access_token');
   }, []);
 
   const completeOnboarding = useCallback(async (profileData: any) => {
