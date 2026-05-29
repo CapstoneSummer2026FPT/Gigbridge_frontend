@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Mail, Lock, User, Eye, EyeOff, ArrowRight, Zap, Bot, Star, CheckCircle } from 'lucide-react';
 import { useApp } from '../../../app/providers/AppProvider';
@@ -17,12 +17,7 @@ export default function AuthScreen() {
     lastName: '', 
     email: '', 
     password: '',
-    otp: '',
   });
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpVerified, setOtpVerified] = useState(false);
-  const [otpTimer, setOtpTimer] = useState(0);
-  const [otpError, setOtpError] = useState('');
 
   // Safely get app context
   let appContext;
@@ -34,53 +29,6 @@ export default function AuthScreen() {
 
   const login = appContext?.login || (async () => {});
   const signup = appContext?.signup || (async () => {});
-
-  // OTP Timer effect
-  useEffect(() => {
-    if (otpTimer > 0) {
-      const timer = setTimeout(() => setOtpTimer(otpTimer - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [otpTimer]);
-
-  const handleSendOTP = async () => {
-    if (!formData.email) {
-      setOtpError('Please enter email first');
-      return;
-    }
-    // Simulate OTP send
-    setOtpSent(true);
-    setOtpTimer(60);
-    setOtpError('');
-    setFormData({ ...formData, otp: '' });
-  };
-
-  const handleVerifyOTP = async () => {
-    // Mock OTP verification - accept any 6 digits
-    if (formData.otp.length === 6 && /^\d{6}$/.test(formData.otp)) {
-      setOtpVerified(true);
-      setOtpError('');
-    } else {
-      setOtpError('Invalid OTP');
-      setOtpSent(false);
-      setOtpTimer(0);
-    }
-  };
-
-  const getOTPButtonState = () => {
-    if (otpVerified) return 'verified';
-    // Nếu OTP đã được gửi và còn thời gian
-    if (otpSent && otpTimer > 0) {
-      // Nếu nhập đủ 6 digit, hiển thị ACTIVE
-      if (formData.otp.length === 6) return 'active';
-      // Nếu chưa nhập đủ, hiển thị waiting
-      return 'waiting';
-    }
-    // Nếu OTP đã gửi nhưng hết thời gian
-    if (otpSent && otpTimer === 0) return 'resend';
-    // Nếu chưa gửi OTP
-    return 'send';
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -260,73 +208,6 @@ export default function AuthScreen() {
                 onChange={e => setFormData({ ...formData, email: e.target.value })}
                 className="input-gb w-full py-3 auth-input-with-icon" />
             </div>
-
-            {mode === 'register' && (
-              <>
-                <div className="flex gap-2">
-                  <div className="flex gap-2 flex-1">
-                    {Array.from({ length: 6 }).map((_, i) => (
-                      <input
-                        key={i}
-                        type="text"
-                        inputMode="numeric"
-                        maxLength={1}
-                        value={formData.otp[i] || ''}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/\D/g, '');
-                          if (value.length <= 1) {
-                            const newOtp = formData.otp.split('');
-                            newOtp[i] = value;
-                            setFormData({ ...formData, otp: newOtp.join('') });
-                            // Auto focus next input
-                            if (value && i < 5) {
-                              const nextInput = document.querySelector(`input[data-otp-index="${i + 1}"]`) as HTMLInputElement;
-                              nextInput?.focus();
-                            }
-                          }
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Backspace' && !formData.otp[i] && i > 0) {
-                            const prevInput = document.querySelector(`input[data-otp-index="${i - 1}"]`) as HTMLInputElement;
-                            prevInput?.focus();
-                          }
-                        }}
-                        data-otp-index={i}
-                        className="input-gb w-full h-12 text-center text-lg font-semibold"
-                      />
-                    ))}
-                  </div>
-                  <button type="button" onClick={() => {
-                    const state = getOTPButtonState();
-                    if (state === 'active') {
-                      handleVerifyOTP();
-                    } else if (state === 'resend' || state === 'send') {
-                      handleSendOTP();
-                    }
-                  }} disabled={getOTPButtonState() === 'waiting' || getOTPButtonState() === 'verified'}
-                    className={`px-4 py-3 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
-                      getOTPButtonState() === 'verified'
-                        ? 'bg-green-500 text-white'
-                        : getOTPButtonState() === 'active'
-                        ? 'btn-cyan'
-                        : getOTPButtonState() === 'waiting'
-                        ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                        : 'btn-cyan'
-                    }`}>
-                    {getOTPButtonState() === 'verified' ? '✓ VERIFIED' : 
-                     getOTPButtonState() === 'active' ? 'ACTIVE' : 
-                     getOTPButtonState() === 'waiting' ? 'Send OTP' :
-                     getOTPButtonState() === 'resend' ? 'Resend OTP' : 'Send OTP'}
-                  </button>
-                </div>
-                {otpSent && otpTimer > 0 && (
-                  <p className="text-xs text-center auth-description">Resend OTP in {otpTimer}s</p>
-                )}
-                {otpError && (
-                  <p className="text-xs text-red-500">{otpError}</p>
-                )}
-              </>
-            )}
             <div className="relative">
               <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 auth-input-icon" />
               <input type={showPassword ? 'text' : 'password'} placeholder="Password" value={formData.password}
@@ -344,7 +225,7 @@ export default function AuthScreen() {
               </div>
             )}
 
-            <button type="submit" disabled={isLoading || (mode === 'register' && !otpVerified)}
+            <button type="submit" disabled={isLoading}
               className="btn-cyan w-full py-3 flex items-center justify-center gap-2">
               {isLoading ? (
                 <div className="w-5 h-5 rounded-full border-2 border-[#0A0F1C] border-t-transparent animate-spin" />
