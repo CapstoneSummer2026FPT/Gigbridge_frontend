@@ -72,6 +72,23 @@ export default function ProfileSetupScreen() {
     setIsSubmitting(true);
     try {
       await completeOnboarding(isClient ? clientData : freelancerData);
+      
+      // Update user's is_setup to true
+      const userStr = localStorage.getItem('gigbridge_user');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        user.is_setup = true;
+        localStorage.setItem('gigbridge_user', JSON.stringify(user));
+        
+        // Also update session data
+        const sessionStr = localStorage.getItem('gigbridge_session');
+        if (sessionStr) {
+          const session = JSON.parse(sessionStr);
+          session.user.is_setup = true;
+          localStorage.setItem('gigbridge_session', JSON.stringify(session));
+        }
+      }
+      
       navigate(isClient ? '/client/dashboard' : '/freelancer/dashboard');
     } catch (error) {
       console.error('Failed to complete onboarding:', error);
