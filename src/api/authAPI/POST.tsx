@@ -11,68 +11,70 @@ import type {
   UserDTO,
 } from '../../types/models/Auth';
 
+const authV1Url = 'v1/auth';
+
 export const authPostAPI = {
   /**
    * Login with email and password
-   * POST /auth/login
+   * POST /v1/auth/login
    */
   login: async (credentials: LoginRequest): Promise<ApiResponse<LoginResponse>> => {
-    return apiService.post<LoginResponse>('/auth/login', credentials);
+    return apiService.post<LoginResponse>(`${authV1Url}/login`, credentials);
   },
 
   /**
    * Register new user
-   * POST /auth/register
+   * POST /v1/auth/register
    */
   register: async (data: RegisterRequest): Promise<ApiResponse<UserDTO>> => {
-    return apiService.post<UserDTO>('/auth/register', data);
+    return apiService.post<UserDTO>(`${authV1Url}/register`, data);
   },
 
   /**
    * Refresh access token
-   * POST /auth/refresh
+   * POST /v1/auth/refresh
    */
   refreshToken: async (accessToken: string): Promise<ApiResponse<LoginResponse>> => {
-    return apiService.post<LoginResponse>('/auth/refresh', { accessToken });
+    return apiService.post<LoginResponse>(`${authV1Url}/refresh`, { accessToken });
   },
 
   /**
    * Forgot password - send reset email
-   * POST /auth/forgot-password
+   * POST /v1/auth/forgot-password
    */
   forgotPassword: async (data: ForgotPasswordRequest): Promise<ApiResponse<null>> => {
-    return apiService.post<null>('/auth/forgot-password', data);
+    return apiService.post<null>(`${authV1Url}/forgot-password`, data);
   },
 
   /**
    * Reset password with token
-   * POST /auth/password-reset
+   * POST /v1/auth/password-reset
    */
   resetPassword: async (data: ResetPasswordRequest): Promise<ApiResponse<null>> => {
-    return apiService.post<null>('/auth/password-reset', data);
+    return apiService.post<null>(`${authV1Url}/password-reset`, data);
   },
 
   /**
    * Resend email confirmation
-   * POST /auth/resend-email
+   * POST /v1/auth/resend-email
    */
   resendEmailConfirmation: async (data: EmailResendConfirmationRequest): Promise<ApiResponse<null>> => {
-    return apiService.post<null>('/auth/resend-email', data);
+    return apiService.post<null>(`${authV1Url}/resend-email`, data);
   },
 
   /**
    * Validate reset token
-   * POST /auth/validate-reset-token
+   * POST /v1/auth/validate-reset-token
    */
   validateResetToken: async (data: ValidateResetTokenRequest): Promise<ApiResponse<null>> => {
-    return apiService.post<null>('/auth/validate-reset-token', data);
+    return apiService.post<null>(`${authV1Url}/validate-reset-token`, data);
   },
 
   /**
    * Google login
-   * POST /auth/google
+   * POST /v1/auth/google
    */
   googleLogin: async (authCode: string): Promise<ApiResponse<LoginResponse>> => {
-    return apiService.post<LoginResponse>('/auth/google', { authCode });
+    return apiService.post<LoginResponse>(`${authV1Url}/google`, { authCode });
   },
 };

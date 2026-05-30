@@ -2,7 +2,7 @@ import { apiService } from '../../service/apiService';
 import type { ApiResponse } from '../../types/common';
 import type { AdminUserDto, CreateUserPayload } from '../../types/models/User';
 
-const Admin_Api_Base_Url = '/v1/admin';
+const AdminV1 = '/v1/admin';
 
 export const adminPostAPI = {
   /**
@@ -11,7 +11,7 @@ export const adminPostAPI = {
    * IsActive = true, IsEmailVerified = false by default.
    */
   createUser: async (payload: CreateUserPayload): Promise<ApiResponse<AdminUserDto>> => {
-    return apiService.post<AdminUserDto>(`${Admin_Api_Base_Url}/users`, {
+    return apiService.post<AdminUserDto>(`${AdminV1}/users`, {
       fullName: payload.fullName,
       email: payload.email,
       password: payload.password,

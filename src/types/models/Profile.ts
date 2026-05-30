@@ -87,13 +87,49 @@ export interface FreelancerProfileDetailDto extends FreelancerProfileDto {
   workExperiences: WorkExperienceDto[];
 }
 
+export interface UpdateClientProfileDto {
+  CompanyName: string;
+  CompanyWebsite?: string;
+  CompanySize: number;
+  Industry: string;
+  CompanyDescription?: string;
+  Location: string;
+}
+
 export interface UpdateFreelancerProfileDto {
-  title?: string;
-  bio?: string;
-  hourlyRate?: number;
-  experienceLevel?: number;
-  availability?: number;
-  location?: string;
+  title: string;
+  bio: string;
+  hourlyRate: number;
+  experienceLevel: number;
+  availability: number;
+  location: string;
+}
+
+export interface ClientProfileResponseDto {
+  id: string;
+  user_id: string;
+  company_name: string;
+  company_website?: string;
+  company_size: number;
+  industry: string;
+  company_description?: string;
+  location: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FreelancerProfileResponseDto {
+  id: string;
+  user_id: string;
+  title: string;
+  bio: string;
+  hourlyRate: number;
+  experienceLevel: number;
+  availability: number;
+  location: string;
+  profileCompletionScore: number;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface FreelancerProfile {

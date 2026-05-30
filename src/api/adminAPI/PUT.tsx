@@ -2,7 +2,7 @@ import { apiService } from '../../service/apiService';
 import type { ApiResponse } from '../../types/common';
 import type { AdminUserDto, UpdateUserPayload } from '../../types/models/User';
 
-const Admin_Api_Base_Url = '/v1/admin';
+const AdminV1 = '/v1/admin';
 
 export const adminPutAPI = {
   /**
@@ -11,7 +11,7 @@ export const adminPutAPI = {
    * Only provided fields are changed (partial update via nullable fields).
    */
   updateUser: async (email: string, payload: UpdateUserPayload): Promise<ApiResponse<AdminUserDto>> => {
-    return apiService.put<AdminUserDto>(`${Admin_Api_Base_Url}/users`, {
+    return apiService.put<AdminUserDto>(`${AdminV1}/users`, {
       email,
       request: {
         fullName: payload.fullName,

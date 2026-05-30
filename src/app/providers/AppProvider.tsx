@@ -23,6 +23,7 @@ interface AppContextValue {
   signup: (email: string, password: string, firstName: string, lastName: string, role: UserRole) => Promise<void>;
   logout: () => void;
   completeOnboarding: (profileData: any) => Promise<void>;
+  markSetupComplete: () => void;
 }
 
 const AppContext = createContext<AppContextValue | undefined>(undefined);
@@ -126,7 +127,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         role: userDTO.role as UserRole,
         is_email_verified: userDTO.isEmailVerified,
         is_active: userDTO.isActive,
-        is_setup: false,
+        is_setup: userDTO.isSetup,
         preferred_language: userDTO.preferredLanguage || 'en',
         last_login_at: null,
         login_failed_time: null,
@@ -179,7 +180,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         role: userDTO.role as UserRole,
         is_email_verified: userDTO.isEmailVerified,
         is_active: userDTO.isActive,
-        is_setup: false,
+        is_setup: userDTO.isSetup,
         preferred_language: userDTO.preferredLanguage || 'en',
         last_login_at: null,
         login_failed_time: null,
@@ -225,6 +226,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user]);
 
+  const markSetupComplete = useCallback(() => {
+    if (user) {
+      const updatedUser = { ...user, is_setup: true };
+      setUser(updatedUser);
+    }
+  }, [user]);
+
   const value: AppContextValue = {
     user,
     role,
@@ -240,7 +248,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     login,
     signup,
     logout,
-    completeOnboarding
+    completeOnboarding,
+    markSetupComplete
   };
 
   return (

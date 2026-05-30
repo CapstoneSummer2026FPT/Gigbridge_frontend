@@ -1,9 +1,11 @@
 export { authGetAPI } from './GET';
 export { authPostAPI } from './POST';
+export { authPutAPI } from './PUT';
 
 // Combined auth API for convenience
 import { authGetAPI } from './GET';
 import { authPostAPI } from './POST';
+import { authPutAPI } from './PUT';
 
 export const authAPI = {
   login: authPostAPI.login,
@@ -16,4 +18,5 @@ export const authAPI = {
   googleLogin: authPostAPI.googleLogin,
   verifyEmail: authGetAPI.verifyEmail,
   testAuth: authGetAPI.testAuth,
+  markSetupComplete: authPutAPI.markSetupComplete,
 };

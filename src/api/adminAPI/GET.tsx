@@ -2,7 +2,7 @@ import { apiService } from '../../service/apiService';
 import type { ApiResponse } from '../../types/common';
 import type { GetUsersParams, PaginatedUsersResponse } from '../../types/models/User';
 
-const Admin_Api_Base_Url = '/v1/admin';
+const AdminV1 = '/v1/admin';
 
 export const adminGetAPI = {
   /**
@@ -11,7 +11,7 @@ export const adminGetAPI = {
    * Backend Status: 1 = active, 0 = inactive (banned), null = all.
    */
   getUsers: async (params: GetUsersParams = {}): Promise<ApiResponse<PaginatedUsersResponse>> => {
-    return apiService.get<PaginatedUsersResponse>(`${Admin_Api_Base_Url}/users`, params);
+    return apiService.get<PaginatedUsersResponse>(`${AdminV1}/users`, params);
   },
 
   /**
