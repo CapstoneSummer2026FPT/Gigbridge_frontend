@@ -47,6 +47,7 @@ export default function ProfileSetupScreen() {
 
   const role = appContext?.role ?? 0;
   const userId = appContext?.user?.id;
+  const completeOnboarding = appContext?.completeOnboarding || (async () => {});
 
   // Client form data
   const [clientData, setClientData] = useState({
