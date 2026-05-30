@@ -20,7 +20,7 @@ interface AppContextValue {
   setTheme: (theme: AppTheme) => void;
   toggleTheme: () => void;
   login: (email: string, password: string) => Promise<UserRole>;
-  signup: (email: string, password: string, firstName: string, lastName: string, role: UserRole) => Promise<void>;
+  signup: (email: string, password: string, fullName: string, role: UserRole) => Promise<void>;
   logout: () => void;
   completeOnboarding: (profileData: any) => Promise<void>;
   markSetupComplete: () => void;
@@ -152,14 +152,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const signup = useCallback(async (email: string, password: string, firstName: string, lastName: string, role: UserRole) => {
+  const signup = useCallback(async (email: string, password: string, fullName: string, role: UserRole) => {
     setIsLoading(true);
     try {
       const registerData = { 
         email, 
         password, 
         confirmPassword: password,
-        fullName: `${firstName} ${lastName}`,
+        fullName,
         role 
       };
       const response = await (authAPI.register as (data: any) => Promise<ApiResponse<UserDTO>>)(registerData);

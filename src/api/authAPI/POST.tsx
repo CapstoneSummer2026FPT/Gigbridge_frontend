@@ -9,9 +9,12 @@ import type {
   ValidateResetTokenRequest,
   LoginResponse,
   UserDTO,
+  SendOtpRequest,
+  VerifyOtpRequest,
 } from '../../types/models/Auth';
 
-const authV1Url = 'v1/auth';
+const authV1Url = 'auth';
+
 
 export const authPostAPI = {
   /**
@@ -77,4 +80,21 @@ export const authPostAPI = {
   googleLogin: async (authCode: string): Promise<ApiResponse<LoginResponse>> => {
     return apiService.post<LoginResponse>(`${authV1Url}/google`, { authCode });
   },
+
+  /**
+   * Send OTP verification code
+   * POST /auth/send-otp
+   */
+  sendOtp: async (data: SendOtpRequest): Promise<ApiResponse<null>> => {
+    return apiService.post<null>(`${authV1Url}/send-otp`, data);
+  },
+
+  /**
+   * Verify OTP verification code
+   * POST /auth/verify-otp
+   */
+  verifyOtp: async (data: VerifyOtpRequest): Promise<ApiResponse<null>> => {
+    return apiService.post<null>(`${authV1Url}/verify-otp`, data);
+  },
 };
+
