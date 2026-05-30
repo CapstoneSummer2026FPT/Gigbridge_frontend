@@ -1,12 +1,16 @@
-import { profileHandlers } from '../../mock_backend';
-import type { FreelancerProfile, ClientProfile } from '../../types/models/User';
+import { apiService } from '../../service/apiService';
+import type { FreelancerProfileDto, UpdateFreelancerProfileDto } from '../../types/models/Profile';
 
 export const profilePutAPI = {
-  updateFreelancerProfile: async (userId: string, data: Partial<FreelancerProfile>) => {
-    return await profileHandlers.updateFreelancerProfile(userId, data);
+  updateFreelancerProfile: async (userId: string, data: UpdateFreelancerProfileDto) => {
+    return await apiService.put<FreelancerProfileDto>(`/api/freelancerprofile/${userId}`, data);
   },
 
-  updateClientProfile: async (userId: string, data: Partial<ClientProfile>) => {
-    return await profileHandlers.updateClientProfile(userId, data);
+  updateMyFreelancerProfile: async (data: UpdateFreelancerProfileDto) => {
+    return await apiService.put<FreelancerProfileDto>('/api/freelancerprofile/me', data);
+  },
+
+  updateClientProfile: async (userId: string, data: any) => {
+    return await apiService.put(`/api/clientprofile/${userId}`, data);
   },
 };
