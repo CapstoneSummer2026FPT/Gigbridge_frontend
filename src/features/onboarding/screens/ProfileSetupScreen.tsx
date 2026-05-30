@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router';
 import { ChevronRight, Building, MapPin, Globe, Briefcase, DollarSign, Award, Sparkles } from 'lucide-react';
 import { useApp } from '../../../app/providers/AppProvider';
 import { GuestLayout } from '../../../shared/components/AppLayout';
+import { profilePutAPI } from '../../../api/profileAPI/PUT';
+import type { UpdateFreelancerProfileDto } from '../../../types/models/Profile';
 import '../styles/profile-setup-screen.css';
 
 const INDUSTRIES = [
@@ -33,6 +35,7 @@ export default function ProfileSetupScreen() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Safely get app context
   let appContext;
@@ -43,7 +46,7 @@ export default function ProfileSetupScreen() {
   }
 
   const role = appContext?.role ?? 0;
-  const completeOnboarding = appContext?.completeOnboarding || (async () => {});
+  const userId = appContext?.user?.id;
 
   // Client form data
   const [clientData, setClientData] = useState({
@@ -56,11 +59,11 @@ export default function ProfileSetupScreen() {
   });
 
   // Freelancer form data
-  const [freelancerData, setFreelancerData] = useState({
+  const [freelancerData, setFreelancerData] = useState<UpdateFreelancerProfileDto>({
     title: '',
     bio: '',
-    hourly_rate: 0,
-    experience_level: 0,
+    hourlyRate: 0,
+    experienceLevel: 0,
     availability: 0,
     location: '',
   });
@@ -70,11 +73,22 @@ export default function ProfileSetupScreen() {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    setError(null);
     try {
-      await completeOnboarding(isClient ? clientData : freelancerData);
-      navigate(isClient ? '/client/dashboard' : '/freelancer/dashboard');
-    } catch (error) {
-      console.error('Failed to complete onboarding:', error);
+      if (!isClient && userId) {
+        const response = await profilePutAPI.updateMyFreelancerProfile(freelancerData);
+        if (response.status) {
+          navigate('/freelancer/dashboard');
+        } else {
+          setError(response.error?.message || 'Failed to update profile');
+        }
+      } else {
+        // Client profile update would go here
+        navigate('/client/dashboard');
+      }
+    } catch (err: any) {
+      setError(err.message || 'An error occurred');
+      console.error('Failed to complete onboarding:', err);
     } finally {
       setIsSubmitting(false);
     }
@@ -85,7 +99,7 @@ export default function ProfileSetupScreen() {
       if (step === 1) return clientData.company_name && clientData.industry;
       return clientData.location;
     } else {
-      if (step === 1) return freelancerData.title && freelancerData.hourly_rate > 0;
+      if (step === 1) return freelancerData.title && freelancerData.hourlyRate && freelancerData.hourlyRate > 0;
       return freelancerData.location && freelancerData.bio;
     }
   };
@@ -116,6 +130,13 @@ export default function ProfileSetupScreen() {
             Step {step} of {totalSteps}
           </p>
         </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="error-message" style={{ padding: '12px', marginBottom: '16px', backgroundColor: '#fee', borderRadius: '4px', color: '#c33' }}>
+            {error}
+          </div>
+        )}
 
         {/* Client Form */}
         {isClient && (
@@ -233,7 +254,7 @@ export default function ProfileSetupScreen() {
                   </label>
                   <input
                     type="text"
-                    value={freelancerData.title}
+                    value={freelancerData.title || ''}
                     onChange={e => setFreelancerData({ ...freelancerData, title: e.target.value })}
                     placeholder="e.g., Full-Stack Developer, UI/UX Designer"
                     className="input-gb"
@@ -247,8 +268,8 @@ export default function ProfileSetupScreen() {
                   </label>
                   <input
                     type="number"
-                    value={freelancerData.hourly_rate || ''}
-                    onChange={e => setFreelancerData({ ...freelancerData, hourly_rate: parseInt(e.target.value) || 0 })}
+                    value={freelancerData.hourlyRate || ''}
+                    onChange={e => setFreelancerData({ ...freelancerData, hourlyRate: parseFloat(e.target.value) || 0 })}
                     placeholder="50"
                     min="0"
                     className="input-gb"
@@ -264,8 +285,8 @@ export default function ProfileSetupScreen() {
                     {EXPERIENCE_LEVELS.map(level => (
                       <button
                         key={level.value}
-                        onClick={() => setFreelancerData({ ...freelancerData, experience_level: level.value })}
-                        className={`radio-button ${freelancerData.experience_level === level.value ? 'radio-button-active' : ''}`}
+                        onClick={() => setFreelancerData({ ...freelancerData, experienceLevel: level.value })}
+                        className={`radio-button ${freelancerData.experienceLevel === level.value ? 'radio-button-active' : ''}`}
                       >
                         {level.label}
                       </button>
@@ -286,7 +307,7 @@ export default function ProfileSetupScreen() {
                   </label>
                   <input
                     type="text"
-                    value={freelancerData.location}
+                    value={freelancerData.location || ''}
                     onChange={e => setFreelancerData({ ...freelancerData, location: e.target.value })}
                     placeholder="City, Country"
                     className="input-gb"
@@ -296,7 +317,7 @@ export default function ProfileSetupScreen() {
                 <div className="form-group">
                   <label className="form-label">Bio *</label>
                   <textarea
-                    value={freelancerData.bio}
+                    value={freelancerData.bio || ''}
                     onChange={e => setFreelancerData({ ...freelancerData, bio: e.target.value })}
                     placeholder="Tell clients about your skills, experience, and what makes you unique..."
                     rows={4}
