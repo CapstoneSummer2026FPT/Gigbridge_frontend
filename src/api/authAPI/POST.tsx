@@ -11,7 +11,7 @@ import type {
   UserDTO,
 } from '../../types/models/Auth';
 
-const authV1Url = 'v1/auth';
+const authV1Url = 'auth';
 
 export const authPostAPI = {
   /**
