@@ -1,5 +1,8 @@
-import { createBrowserRouter, Outlet } from 'react-router';
+import type { ReactNode } from 'react';
+import { createBrowserRouter, Navigate, Outlet } from 'react-router';
 import { AppProvider } from './providers/AppProvider';
+import { useApp } from './providers/AppProvider';
+import { UserRole } from '../types/models/User';
 
 // Lazy imports for all screens
 import LandingScreen from '../features/landing/screens/LandingScreenNew';
@@ -74,6 +77,24 @@ function RootLayout() {
   );
 }
 
+function AdminRoute({ children }: { children: ReactNode }) {
+  const { isLoading, isAuthenticated, role } = useApp();
+
+  if (isLoading) {
+    return null;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  if (role !== UserRole.Admin) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
+}
+
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -126,15 +147,15 @@ export const router = createBrowserRouter([
       { path: 'financial-overview', element: <FinancialOverviewScreen /> },
 
       // Admin
-      { path: 'admin', element: <AdminDashboardScreen /> },
-      { path: 'admin/users', element: <AdminUsersScreen /> },
-      { path: 'admin/jobs', element: <AdminJobsScreen /> },
-      { path: 'admin/contracts', element: <AdminContractsScreen /> },
-      { path: 'admin/reports', element: <AdminReportsScreen /> },
-      { path: 'admin/feedback', element: <AdminFeedbackScreen /> },
-      { path: 'admin/system-tracking', element: <AdminSystemTrackingScreen /> },
-      { path: 'admin/revenue', element: <AdminRevenueScreen /> },
-      { path: 'admin/notifications', element: <AdminNotificationsScreen /> },
+      { path: 'admin', element: <AdminRoute><AdminDashboardScreen /></AdminRoute> },
+      { path: 'admin/users', element: <AdminRoute><AdminUsersScreen /></AdminRoute> },
+      { path: 'admin/jobs', element: <AdminRoute><AdminJobsScreen /></AdminRoute> },
+      { path: 'admin/contracts', element: <AdminRoute><AdminContractsScreen /></AdminRoute> },
+      { path: 'admin/reports', element: <AdminRoute><AdminReportsScreen /></AdminRoute> },
+      { path: 'admin/feedback', element: <AdminRoute><AdminFeedbackScreen /></AdminRoute> },
+      { path: 'admin/system-tracking', element: <AdminRoute><AdminSystemTrackingScreen /></AdminRoute> },
+      { path: 'admin/revenue', element: <AdminRoute><AdminRevenueScreen /></AdminRoute> },
+      { path: 'admin/notifications', element: <AdminRoute><AdminNotificationsScreen /></AdminRoute> },
 
       // Market Insights
       { path: 'market-insights', element: <MarketInsightsScreen /> },

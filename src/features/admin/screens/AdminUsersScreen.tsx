@@ -2,14 +2,39 @@ import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { Search, Filter, Users, UserCheck, UserX, Shield, Ban, CheckCircle, XCircle, Eye, Edit, MoreVertical, Download, Mail, Calendar, Briefcase, DollarSign } from 'lucide-react';
 import { AppLayout } from '../../../shared/components/AppLayout';
-import { adminGetAPI } from '../../../api/adminAPI/GET';
-import { adminPutAPI } from '../../../api/adminAPI/PUT';
-import { adminPatchAPI } from '../../../api/adminAPI/PATCH';
-import type { User } from '../../../types';
+import { adminAPI } from '../../../api/adminAPI';
+import type { AdminUserDto, User } from '../../../types';
+import { UserRole } from '../../../types';
 import '../styles/admin-users-screen.css';
 
 type UserFilter = 'all' | 'client' | 'freelancer' | 'admin' | 'banned';
 type UserSort = 'name' | 'joined' | 'status';
+
+const mapAdminUserDtoToUser = (dto: AdminUserDto): User => {
+  const spaceIndex = dto.fullName.indexOf(' ');
+  const firstName = spaceIndex >= 0 ? dto.fullName.slice(0, spaceIndex) : dto.fullName;
+  const lastName = spaceIndex >= 0 ? dto.fullName.slice(spaceIndex + 1) : '';
+
+  return {
+    id: dto.userId,
+    email: dto.email,
+    first_name: firstName,
+    last_name: lastName,
+    full_name: dto.fullName,
+    phone_number: dto.phoneNumber ?? null,
+    role: dto.role as UserRole,
+    is_email_verified: dto.isEmailVerified,
+    is_active: dto.isActive,
+    is_setup: false,
+    preferred_language: dto.preferredLanguage || 'en',
+    last_login_at: null,
+    login_failed_time: null,
+    access_failed_count: 0,
+    gigcoin_balance: 0,
+    created_at: dto.createdAt,
+    updated_at: dto.updatedAt || dto.createdAt,
+  };
+};
 
 export default function AdminUsersScreen() {
   const navigate = useNavigate();
@@ -32,8 +57,8 @@ export default function AdminUsersScreen() {
 
   const loadUsers = async () => {
     setLoading(true);
-    const result = await adminGetAPI.getAllUsers();
-    setUsers(result);
+    const response = await adminAPI.getAllUsers();
+    setUsers(response.success && response.data ? response.data.items.map(mapAdminUserDtoToUser) : []);
     setLoading(false);
   };
 
@@ -81,11 +106,11 @@ export default function AdminUsersScreen() {
   const handleBanUser = async (userId: string) => {
     const user = allUsers.find(u => u.id === userId);
     if (user) {
-      const { success } = await adminPatchAPI.toggleUserActivity(user.email);
-      if (success) {
+      const response = await adminAPI.toggleUserActivity(user.email);
+      if (response.success) {
         await loadUsers();
       } else {
-        alert('Failed to update user status');
+        alert(response.message || 'Failed to update user status');
       }
       setShowActionMenu(null);
     }
@@ -664,15 +689,15 @@ export default function AdminUsersScreen() {
                     const fullName = [editForm.firstName || selectedUser.first_name, editForm.lastName || selectedUser.last_name]
                       .filter(Boolean).join(' ');
 
-                    const { user, error } = await adminPutAPI.updateUser(selectedUser.email, {
+                    const response = await adminAPI.updateUser(selectedUser.email, {
                       fullName: fullName || undefined,
                     });
 
-                    if (user) {
+                    if (response.success && response.data) {
                       await loadUsers();
                       alert('User information updated successfully!');
                     } else {
-                      alert(error || 'Failed to update user');
+                      alert(response.message || 'Failed to update user');
                     }
                     setSelectedUser(null);
                     setEditForm({firstName: '', lastName: '', email: ''});

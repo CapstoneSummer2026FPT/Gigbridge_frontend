@@ -1,15 +1,8 @@
 import { apiService } from '../../service/apiService';
-import type { AdminUserDto } from './mapper';
-import { mapAdminUserDto } from './mapper';
-import type { User } from '../../types/models/User';
+import type { ApiResponse } from '../../types/common';
+import type { AdminUserDto, CreateUserPayload } from '../../types/models/User';
 
-export interface CreateUserPayload {
-  fullName: string;
-  email: string;
-  password: string;
-  role: number;
-  phoneNumber?: string;
-}
+const Admin_Api_Base_Url = '/v1/admin';
 
 export const adminPostAPI = {
   /**
@@ -17,22 +10,13 @@ export const adminPostAPI = {
    * Creates a new user. The backend hashes the password and sets
    * IsActive = true, IsEmailVerified = false by default.
    */
-  createUser: async (payload: CreateUserPayload): Promise<{ user: User | null; error: string | null }> => {
-    const response = await apiService.post<AdminUserDto>('/api/v1/admin/users', {
+  createUser: async (payload: CreateUserPayload): Promise<ApiResponse<AdminUserDto>> => {
+    return apiService.post<AdminUserDto>(`${Admin_Api_Base_Url}/users`, {
       fullName: payload.fullName,
       email: payload.email,
       password: payload.password,
       role: payload.role,
       phoneNumber: payload.phoneNumber,
     });
-
-    if (!response.status || !response.data) {
-      const message = response.error?.response?.data?.message
-        || response.error?.message
-        || 'Failed to create user';
-      return { user: null, error: message };
-    }
-
-    return { user: mapAdminUserDto(response.data), error: null };
   },
 };
