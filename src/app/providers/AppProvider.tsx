@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import type { User, UserRole } from '../../types/models/User';
 import type { ClientProfile, FreelancerProfile } from '../../types/models/Profile';
 import { authHandlers } from '../../mock_backend/handlers/authHandlers';
+import { apiService } from '../../service/apiService';
 
 export type AppTheme = 'black' | 'white';
 
@@ -30,6 +31,49 @@ interface AppContextValue {
 }
 
 const AppContext = createContext<AppContextValue | undefined>(undefined);
+
+interface BackendUserDto {
+  userId: string;
+  fullName: string;
+  email: string;
+  phoneNumber: string | null;
+  role: number;
+  isEmailVerified: boolean;
+  isActive: boolean;
+  preferredLanguage: string | null;
+  createdAt: string;
+  updatedAt: string | null;
+}
+
+interface LoginResponse {
+  user: BackendUserDto;
+  token: string;
+}
+
+const mapBackendUser = (dto: BackendUserDto): User => {
+  const spaceIndex = dto.fullName.indexOf(' ');
+  const firstName = spaceIndex >= 0 ? dto.fullName.slice(0, spaceIndex) : dto.fullName;
+  const lastName = spaceIndex >= 0 ? dto.fullName.slice(spaceIndex + 1) : '';
+
+  return {
+    id: dto.userId,
+    email: dto.email,
+    first_name: firstName,
+    last_name: lastName,
+    full_name: dto.fullName,
+    phone_number: dto.phoneNumber ?? null,
+    role: dto.role as UserRole,
+    is_email_verified: dto.isEmailVerified,
+    is_active: dto.isActive,
+    preferred_language: dto.preferredLanguage || 'en',
+    last_login_at: null,
+    login_failed_time: null,
+    access_failed_count: 0,
+    gigcoin_balance: 0,
+    created_at: dto.createdAt,
+    updated_at: dto.updatedAt || dto.createdAt,
+  };
+};
 
 /**
  * AppProvider - Global application state provider
@@ -124,7 +168,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const isAuthenticated = !!user;
   const isOnboardingComplete = isAuthenticated && (
-    role === 0 ? !!clientProfile : !!freelancerProfile
+    role === 2 ? true : role === 0 ? !!clientProfile : !!freelancerProfile
   );
 
   const setRole = useCallback(async (newRole: UserRole) => {
@@ -142,31 +186,40 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const login = useCallback(async (email: string, password: string): Promise<UserRole> => {
     setIsLoading(true);
     try {
-      const result = await authHandlers.login({ email, password });
-      setUser(result.user);
-      setRoleState(result.user.role);
+      const response = await apiService.post<LoginResponse>('/api/Auth/login', { email, password });
+
+      if (!response.status || !response.data) {
+        throw new Error(response.message || response.error?.response?.data?.message || response.error?.message || 'Login failed');
+      }
+
+      const loggedInUser = mapBackendUser(response.data.user);
+      localStorage.setItem('accessToken', response.data.token);
+      localStorage.setItem('user', JSON.stringify(loggedInUser));
+
+      setUser(loggedInUser);
+      setRoleState(loggedInUser.role);
       
       // Save session tokens and user data
       localStorage.setItem('gigbridge_session', JSON.stringify({
-        user: result.user,
-        role: result.user.role
+        user: loggedInUser,
+        role: loggedInUser.role
       }));
-      localStorage.setItem('access_token', result.token);
-      localStorage.setItem('gigbridge_user', JSON.stringify(result.user));
+      localStorage.setItem('access_token', response.data.token);
+      localStorage.setItem('gigbridge_user', JSON.stringify(loggedInUser));
 
       // Load profile based on role
       try {
-        const profileData = await authHandlers.getProfile(result.user.id);
-        if (result.user.role === 0) {
+        const profileData = await authHandlers.getProfile(loggedInUser.id);
+        if (loggedInUser.role === 0) {
           setClientProfile(profileData?.clientProfile || null);
-        } else if (result.user.role === 1) {
+        } else if (loggedInUser.role === 1) {
           setFreelancerProfile(profileData?.freelancerProfile || null);
         }
       } catch (profileErr) {
         console.warn('Could not load profile:', profileErr);
         // Profile might not exist yet for new users
       }
-      return result.user.role;
+      return loggedInUser.role;
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -197,6 +250,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setRoleState(null);
     setClientProfile(null);
     setFreelancerProfile(null);
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('user');
     localStorage.removeItem('gigbridge_session');
     localStorage.removeItem('gigbridge_user');
     localStorage.removeItem('access_token');

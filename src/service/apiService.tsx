@@ -8,6 +8,15 @@ interface ApiResponse<T = any> {
   message?: string;
 }
 
+interface BackendApiResponse<T = any> {
+  success: boolean;
+  statusCode: number;
+  message?: string;
+  data?: T;
+  errors?: any;
+  timestamp?: string;
+}
+
 class ApiResponseWrapper<T> implements ApiResponse<T> {
   public status: boolean;
   public data: T | null;
@@ -30,10 +39,20 @@ class ApiResponseWrapper<T> implements ApiResponse<T> {
     return new ApiResponseWrapper(true, data);
   }
 
-  static error(error: any): ApiResponse<never> {
-    return new ApiResponseWrapper(false, null, error);
+  static error(error: any, message?: string): ApiResponse<never> {
+    return new ApiResponseWrapper(false, null, error, message);
   }
 }
+
+const isBackendApiResponse = (data: unknown): data is BackendApiResponse => {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'success' in data &&
+    'statusCode' in data &&
+    'data' in data
+  );
+};
 
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_CONFIG.BASE_URL,
@@ -61,12 +80,19 @@ apiClient.interceptors.response.use(
     const originalRequest: any = error.config;
 
     // Handle 401 - try to refresh token
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      originalRequest.url !== '/api/Auth/refresh'
+    ) {
       originalRequest._retry = true;
 
       try {
-        const response = await apiClient.post('/api/v1/auth/refresh');
-        const { accessToken } = response.data;
+        const response = await apiClient.post('/api/Auth/refresh', {
+          accessToken: localStorage.getItem('accessToken') || '',
+        });
+        const refreshData = isBackendApiResponse(response.data) ? response.data.data : response.data;
+        const accessToken = refreshData?.accessToken || refreshData?.token;
 
         if (accessToken) {
           localStorage.setItem('accessToken', accessToken);
@@ -89,6 +115,22 @@ apiClient.interceptors.response.use(
 const handleResponse = (response: AxiosResponse): ApiResponse<any> => {
   const { data } = response;
 
+  if (isBackendApiResponse(data)) {
+    if (data.success) {
+      return ApiResponseWrapper.success(data.data ?? null);
+    }
+
+    return ApiResponseWrapper.error(
+      {
+        message: data.message,
+        status: data.statusCode,
+        errors: data.errors,
+        response,
+      },
+      data.message
+    );
+  }
+
   if (data instanceof Blob) {
     return ApiResponseWrapper.success(window.URL.createObjectURL(data));
   }
@@ -101,7 +143,7 @@ const handleResponse = (response: AxiosResponse): ApiResponse<any> => {
     return ApiResponseWrapper.success(data || []);
   }
 
-  if (typeof data === 'object') {
+  if (typeof data === 'object' && data !== null) {
     return ApiResponseWrapper.success(data);
   }
 
@@ -149,9 +191,9 @@ export const apiService = {
     }
   },
 
-  async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
+  async delete<T>(endpoint: string, data?: Record<string, any>): Promise<ApiResponse<T>> {
     try {
-      const response = await apiClient.delete<T>(endpoint);
+      const response = await apiClient.delete<T>(endpoint, { data });
       return handleResponse(response);
     } catch (error: any) {
       return ApiResponseWrapper.error(error);
