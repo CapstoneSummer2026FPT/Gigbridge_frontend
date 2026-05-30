@@ -1,16 +1,12 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import type { User, UserRole } from '../../types/models/User';
 import type { ClientProfile, FreelancerProfile } from '../../types/models/Profile';
-import { authHandlers } from '../../mock_backend/handlers/authHandlers';
+import type { ApiResponse } from '../../types/common';
+import type { LoginResponse, UserDTO } from '../../types/models/Auth';
+import { authAPI } from '../../api/authAPI';
 
 export type AppTheme = 'black' | 'white';
 
-/**
- * AppContextValue - Global application state interface
- *
- * Provides authentication, user profile, theme, and loading states
- * to all components within the AppProvider tree.
- */
 interface AppContextValue {
   user: User | null;
   role: UserRole | null;
@@ -31,23 +27,6 @@ interface AppContextValue {
 
 const AppContext = createContext<AppContextValue | undefined>(undefined);
 
-/**
- * AppProvider - Global application state provider
- * 
- * Must be placed inside React Router tree (via RootLayout in router.tsx)
- * to ensure context propagates correctly to all route components.
- * 
- * Usage:
- * ```tsx
- * function RootLayout() {
- *   return (
- *     <AppProvider>
- *       <Outlet />  // All routes render here
- *     </AppProvider>
- *   );
- * }
- * ```
- */
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [role, setRoleState] = useState<UserRole | null>(null);
@@ -56,9 +35,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [clientProfile, setClientProfile] = useState<ClientProfile | null>(null);
   const [freelancerProfile, setFreelancerProfile] = useState<FreelancerProfile | null>(null);
 
-  // Check for existing session on mount
   useEffect(() => {
-    // Load saved theme or default to black
     const savedTheme = localStorage.getItem('gigbridge_theme') as AppTheme;
     const initialTheme = savedTheme && (savedTheme === 'black' || savedTheme === 'white') ? savedTheme : 'black';
     setThemeState(initialTheme);
@@ -84,17 +61,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         if (savedUser) {
           setUser(savedUser);
           setRoleState(savedRole);
-
-          // Load profile data
-          if (savedRole === 0) {
-            // Load client profile
-            const profile = await authHandlers.getProfile(savedUser.id);
-            setClientProfile(profile?.clientProfile || null);
-          } else {
-            // Load freelancer profile
-            const profile = await authHandlers.getProfile(savedUser.id);
-            setFreelancerProfile(profile?.freelancerProfile || null);
-          }
         }
       } catch (_e) {
         localStorage.removeItem('gigbridge_session');
@@ -107,18 +73,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     initApp();
   }, []);
 
-  // Apply theme to document
   useEffect(() => {
     const root = document.documentElement;
     const allThemes: AppTheme[] = ['black', 'white'];
-
-    // Remove all theme classes
     allThemes.forEach(t => root.classList.remove(t));
-
-    // Add current theme class
     root.classList.add(theme);
-
-    // Save theme to localStorage
     localStorage.setItem('gigbridge_theme', theme);
   }, [theme]);
 
@@ -127,8 +86,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     role === 0 ? !!clientProfile : !!freelancerProfile
   );
 
-  const setRole = useCallback(async (newRole: UserRole) => {
+  const setRole = useCallback((newRole: UserRole) => {
     setRoleState(newRole);
+    // Update stored role
+    const savedUser = localStorage.getItem('gigbridge_user');
+    if (savedUser) {
+      const user = JSON.parse(savedUser);
+      user.role = newRole;
+      localStorage.setItem('gigbridge_user', JSON.stringify(user));
+    }
   }, []);
 
   const setTheme = useCallback((newTheme: AppTheme) => {
@@ -142,31 +108,41 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const login = useCallback(async (email: string, password: string): Promise<UserRole> => {
     setIsLoading(true);
     try {
-      const result = await authHandlers.login({ email, password });
-      setUser(result.user);
-      setRoleState(result.user.role);
+      const response = await authAPI.login({ email, password });
+      const apiResponse = response as unknown as ApiResponse<LoginResponse>;
       
-      // Save session tokens and user data
-      localStorage.setItem('gigbridge_session', JSON.stringify({
-        user: result.user,
-        role: result.user.role
-      }));
-      localStorage.setItem('access_token', result.token);
-      localStorage.setItem('gigbridge_user', JSON.stringify(result.user));
-
-      // Load profile based on role
-      try {
-        const profileData = await authHandlers.getProfile(result.user.id);
-        if (result.user.role === 0) {
-          setClientProfile(profileData?.clientProfile || null);
-        } else if (result.user.role === 1) {
-          setFreelancerProfile(profileData?.freelancerProfile || null);
-        }
-      } catch (profileErr) {
-        console.warn('Could not load profile:', profileErr);
-        // Profile might not exist yet for new users
+      if (!apiResponse.success || !apiResponse.data) {
+        throw new Error(apiResponse.message || 'Login failed');
       }
-      return result.user.role;
+
+      const { user: userDTO, token } = apiResponse.data;
+      const user: User = {
+        id: userDTO.userId,
+        email: userDTO.email,
+        first_name: userDTO.fullName.split(' ')[0],
+        last_name: userDTO.fullName.split(' ')[1] || '',
+        full_name: userDTO.fullName,
+        phone_number: userDTO.phoneNumber || null,
+        role: userDTO.role as UserRole,
+        is_email_verified: userDTO.isEmailVerified,
+        is_active: userDTO.isActive,
+        is_setup: false,
+        preferred_language: userDTO.preferredLanguage || 'en',
+        last_login_at: null,
+        login_failed_time: null,
+        access_failed_count: 0,
+        gigcoin_balance: 0,
+        created_at: userDTO.createdAt,
+        updated_at: userDTO.updatedAt || userDTO.createdAt,
+      };
+
+      setUser(user);
+      setRoleState(user.role);
+      localStorage.setItem('gigbridge_session', JSON.stringify({ user, role: user.role }));
+      localStorage.setItem('access_token', token);
+      localStorage.setItem('gigbridge_user', JSON.stringify(user));
+
+      return user.role;
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -178,15 +154,48 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const signup = useCallback(async (email: string, password: string, firstName: string, lastName: string, role: UserRole) => {
     setIsLoading(true);
     try {
-      const result = await authHandlers.signup(email, password, firstName, lastName, role);
-      setUser(result.user);
-      setRoleState(result.user.role);
+      const registerData = { 
+        email, 
+        password, 
+        confirmPassword: password,
+        fullName: `${firstName} ${lastName}`,
+        role 
+      };
+      const response = await (authAPI.register as (data: any) => Promise<ApiResponse<UserDTO>>)(registerData);
+      const apiResponse = response as unknown as ApiResponse<UserDTO>;
       
-      // Save session
-      localStorage.setItem('gigbridge_session', JSON.stringify({
-        user: result.user,
-        role: result.user.role
-      }));
+      if (!apiResponse.success || !apiResponse.data) {
+        throw new Error(apiResponse.message || 'Registration failed');
+      }
+
+      const userDTO = apiResponse.data;
+      const user: User = {
+        id: userDTO.userId,
+        email: userDTO.email,
+        first_name: userDTO.fullName.split(' ')[0],
+        last_name: userDTO.fullName.split(' ')[1] || '',
+        full_name: userDTO.fullName,
+        phone_number: userDTO.phoneNumber || null,
+        role: userDTO.role as UserRole,
+        is_email_verified: userDTO.isEmailVerified,
+        is_active: userDTO.isActive,
+        is_setup: false,
+        preferred_language: userDTO.preferredLanguage || 'en',
+        last_login_at: null,
+        login_failed_time: null,
+        access_failed_count: 0,
+        gigcoin_balance: 0,
+        created_at: userDTO.createdAt,
+        updated_at: userDTO.updatedAt || userDTO.createdAt,
+      };
+
+      setUser(user);
+      setRoleState(user.role);
+      localStorage.setItem('gigbridge_session', JSON.stringify({ user, role: user.role }));
+      localStorage.setItem('gigbridge_user', JSON.stringify(user));
+    } catch (error) {
+      console.error('Signup error:', error);
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -204,15 +213,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const completeOnboarding = useCallback(async (profileData: any) => {
     if (!user) return;
-    
     setIsLoading(true);
     try {
       if (user.role === 0) {
-        const profile = await authHandlers.createClientProfile(user.id, profileData);
-        setClientProfile(profile);
+        setClientProfile(profileData);
       } else {
-        const profile = await authHandlers.createFreelancerProfile(user.id, profileData);
-        setFreelancerProfile(profile);
+        setFreelancerProfile(profileData);
       }
     } finally {
       setIsLoading(false);

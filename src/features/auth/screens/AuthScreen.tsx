@@ -39,17 +39,27 @@ export default function AuthScreen() {
     try {
       if (mode === 'login') {
         const role = await login(formData.email, formData.password);
-        if (role === UserRole.Client) {
-          navigate('/client/dashboard');
-        } else if (role === UserRole.Freelancer) {
-          navigate('/freelancer/dashboard');
-        } else if (role === UserRole.Admin) {
+        
+        // Get user from context to check is_setup
+        const userStr = localStorage.getItem('gigbridge_user');
+        const user = userStr ? JSON.parse(userStr) : null;
+        
+        if (role === UserRole.Admin) {
           navigate('/admin');
+        } else if (user?.is_setup) {
+          // User already setup, go to dashboard
+          if (role === UserRole.Client) {
+            navigate('/client/dashboard');
+          } else if (role === UserRole.Freelancer) {
+            navigate('/freelancer/dashboard');
+          }
         } else {
-          navigate('/');
+          // User not setup, go to role selection
+          navigate('/onboarding/role-selection');
         }
       } else {
-        // After signup, go to role selection
+        // Register - user needs to select role first
+        await signup(formData.email, formData.password, formData.firstName, formData.lastName, UserRole.Client);
         navigate('/onboarding/role-selection');
       }
     } catch (err: any) {
