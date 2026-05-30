@@ -7,6 +7,7 @@ export interface UserDTO {
   role: number;
   isEmailVerified: boolean;
   isActive: boolean;
+  isSetup: boolean;
   preferredLanguage?: string | null;
   provider?: string | null;
   createdAt: string;

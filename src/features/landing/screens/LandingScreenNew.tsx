@@ -487,11 +487,11 @@ export default function LandingScreenNew() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate('/auth')}
+                onClick={() => navigate('/auth/signup')}
                 className="landing-new-cta-btn-primary"
               >
                 <Bot size={20} />
-                Get Started Free
+                Sign Up Free
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}

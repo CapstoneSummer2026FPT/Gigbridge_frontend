@@ -18,6 +18,9 @@ apiClient.interceptors.request.use(
     const token = localStorage.getItem('access_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log('✓ Token attached to request:', config.url);
+    } else {
+      console.warn('✗ No token found in localStorage for:', config.url);
     }
     return config;
   },
@@ -35,20 +38,41 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const response = await apiClient.post('/auth/refresh');
-        const { data } = response.data;
-        const accessToken = data?.accessToken;
+        const currentToken = localStorage.getItem('access_token');
+        
+        // Don't send Authorization header for refresh request to avoid infinite loop
+        const refreshResponse = await axios.post(
+          `${API_BASE_URL}/v1/auth/refresh`,
+          { accessToken: currentToken },
+          { 
+            withCredentials: true,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+        
+        // Response structure: ApiResponse<LoginResponse>
+        const apiResponse = refreshResponse.data;
+        const loginData = apiResponse.data; // LoginResponse
+        const newAccessToken = loginData?.token;
 
-        if (accessToken) {
-          localStorage.setItem('access_token', accessToken);
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        if (newAccessToken) {
+          // Save new token
+          localStorage.setItem('access_token', newAccessToken);
+          
+          // Update the failed request with new token
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          
+          // Retry the original request with new token
           return apiClient(originalRequest);
+        } else {
+          throw new Error('No token in refresh response');
         }
       } catch (refreshError) {
         // Refresh failed - logout user
         localStorage.removeItem('access_token');
         localStorage.removeItem('gigbridge_user');
-        window.location.href = '/';
+        localStorage.removeItem('gigbridge_session');
+        window.location.href = '/auth/login';
         return Promise.reject(refreshError);
       }
     }

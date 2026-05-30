@@ -1,26 +1,20 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Mail, Lock, User, Eye, EyeOff, ArrowRight, Zap, Bot, Star, CheckCircle } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Zap, Bot, Star, CheckCircle } from 'lucide-react';
 import { useApp } from '../../../app/providers/AppProvider';
 import { UserRole } from '../../../types/models/User';
 import '../styles/auth-screen.css';
 
-type AuthMode = 'login' | 'register';
-
-export default function AuthScreen() {
+export default function LoginScreen() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<AuthMode>('login');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({ 
-    firstName: '', 
-    lastName: '', 
     email: '', 
     password: '',
   });
 
-  // Safely get app context
   let appContext;
   try {
     appContext = useApp();
@@ -29,7 +23,6 @@ export default function AuthScreen() {
   }
 
   const login = appContext?.login || (async () => undefined);
-  const signup = appContext?.signup || (async () => {});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,30 +30,21 @@ export default function AuthScreen() {
     setIsLoading(true);
 
     try {
-      if (mode === 'login') {
-        const role = await login(formData.email, formData.password);
-        
-        // Get user from context to check is_setup
-        const userStr = localStorage.getItem('gigbridge_user');
-        const user = userStr ? JSON.parse(userStr) : null;
-        
-        if (role === UserRole.Admin) {
-          navigate('/admin');
-        } else if (user?.is_setup) {
-          // User already setup, go to dashboard
-          if (role === UserRole.Client) {
-            navigate('/client/dashboard');
-          } else if (role === UserRole.Freelancer) {
-            navigate('/freelancer/dashboard');
-          }
-        } else {
-          // User not setup, go to role selection
-          navigate('/onboarding/role-selection');
+      const role = await login(formData.email, formData.password);
+      
+      const userStr = localStorage.getItem('gigbridge_user');
+      const user = userStr ? JSON.parse(userStr) : null;
+      
+      if (role === UserRole.Admin) {
+        navigate('/admin');
+      } else if (user?.is_setup) {
+        if (role === UserRole.Client) {
+          navigate('/client/dashboard');
+        } else if (role === UserRole.Freelancer) {
+          navigate('/freelancer/dashboard');
         }
       } else {
-        // Register - user needs to select role first
-        await signup(formData.email, formData.password, formData.firstName, formData.lastName, UserRole.Client);
-        navigate('/onboarding/role-selection');
+        navigate('/onboarding/profile-setup');
       }
     } catch (err: any) {
       setError(err.message || 'An error occurred');
@@ -73,7 +57,6 @@ export default function AuthScreen() {
     setIsLoading(true);
     setError('');
     try {
-      // Use demo email addresses that exist in seed data
       const demoCredentials = {
         client: 'client@gigbridge.com',
         freelancer: 'freelancer@gigbridge.com',
@@ -82,11 +65,10 @@ export default function AuthScreen() {
       
       await login(demoCredentials[demoRole], 'demo');
       
-      // Navigate dynamically based on role stored in gigbridge_user
       const gigbridgeUserStr = localStorage.getItem('gigbridge_user');
       if (gigbridgeUserStr) {
         const user = JSON.parse(gigbridgeUserStr);
-        const role = user.role; // 0 = Client, 1 = Freelancer, 2 = Admin
+        const role = user.role;
         if (role === 0) {
           navigate('/client/dashboard');
         } else if (role === 1) {
@@ -111,12 +93,9 @@ export default function AuthScreen() {
     <div className="min-h-screen flex auth-container">
       {/* Left Panel - Illustration */}
       <div className="hidden lg:flex flex-col flex-1 relative overflow-hidden p-10 auth-left-panel">
-
-        {/* Animated background circles */}
         <div className="absolute top-20 left-20 w-80 h-80 rounded-full opacity-10 animate-float auth-orb-cyan" />
         <div className="absolute bottom-40 right-10 w-60 h-60 rounded-full opacity-10 animate-float auth-orb-purple" />
 
-        {/* Logo */}
         <div className="flex items-center gap-3 mb-auto">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center auth-logo-bg">
             <Zap size={22} className="auth-logo-icon" />
@@ -125,14 +104,11 @@ export default function AuthScreen() {
           <span className="badge-cyan">AI</span>
         </div>
 
-        {/* Main Content */}
         <div className="flex-1 flex flex-col items-center justify-center text-center">
-          {/* AI Avatar / Illustration */}
           <div className="relative mb-8">
             <div className="w-32 h-32 rounded-full mx-auto flex items-center justify-center animate-orb auth-ai-avatar">
               <Bot size={56} className="auth-ai-avatar-icon" />
             </div>
-            {/* Orbiting elements */}
             <div className="absolute -top-4 -right-4 w-8 h-8 rounded-full flex items-center justify-center auth-orb-green">
               <CheckCircle size={14} className="auth-orb-green-icon" />
             </div>
@@ -146,14 +122,12 @@ export default function AuthScreen() {
             Join the intelligent marketplace that connects world-class talent with ambitious companies.
           </p>
 
-          {/* Feature pills */}
           <div className="flex flex-wrap gap-2 justify-center mt-6">
             {['AI Job Matching', 'Smart Proposals', 'AI Interviews', 'Instant Pay'].map(f => (
               <span key={f} className="badge-cyan">{f}</span>
             ))}
           </div>
 
-          {/* Social proof */}
           <div className="flex items-center gap-3 mt-8">
             <div className="flex -space-x-2">
               {['jordan', 'alex', 'sarah', 'marcus'].map(seed => (
@@ -180,7 +154,6 @@ export default function AuthScreen() {
       {/* Right Panel - Form */}
       <div className="flex-1 flex items-center justify-center p-6 md:p-12">
         <div className="w-full max-w-md">
-          {/* Mobile Logo */}
           <div className="flex items-center gap-2 mb-8 lg:hidden">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center auth-logo-bg">
               <Zap size={16} className="auth-logo-icon" />
@@ -188,14 +161,9 @@ export default function AuthScreen() {
             <span className="text-primary font-bold">GigBridge</span>
           </div>
 
-          <h1 className="text-3xl font-black text-primary mb-2">
-            {mode === 'login' ? 'Welcome back' : 'Get started today'}
-          </h1>
-          <p className="mb-8 auth-subtitle">
-            {mode === 'login' ? 'Sign in to your GigBridge account' : 'Create your free account in seconds'}
-          </p>
+          <h1 className="text-3xl font-black text-primary mb-2">Welcome back</h1>
+          <p className="mb-8 auth-subtitle">Sign in to your GigBridge account</p>
 
-          {/* Google SSO */}
           <button className="w-full flex items-center justify-center gap-3 py-3 rounded-xl mb-6 transition-all auth-google-btn"
             onClick={() => handleDemoLogin('freelancer')}>
             <svg viewBox="0 0 24 24" className="w-5 h-5">
@@ -213,7 +181,6 @@ export default function AuthScreen() {
             <div className="flex-1 h-px auth-divider" />
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div className="px-4 py-3 rounded-xl text-sm" style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#EF4444' }}>
@@ -221,14 +188,6 @@ export default function AuthScreen() {
               </div>
             )}
             
-            {mode === 'register' && (
-              <div className="relative">
-                <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 auth-input-icon" />
-                <input type="text" placeholder="Full Name" value={formData.firstName + ' ' + formData.lastName}
-                  onChange={e => setFormData({ ...formData, firstName: e.target.value.split(' ')[0], lastName: e.target.value.split(' ')[1] })}
-                  className="input-gb w-full py-3 auth-input-with-icon" />
-              </div>
-            )}
             <div className="relative">
               <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 auth-input-icon" />
               <input type="email" placeholder="Email address" value={formData.email}
@@ -246,11 +205,9 @@ export default function AuthScreen() {
               </button>
             </div>
 
-            {mode === 'login' && (
-              <div className="flex justify-end">
-                <button type="button" className="text-sm auth-link-cyan">Forgot password?</button>
-              </div>
-            )}
+            <div className="flex justify-end">
+              <button type="button" className="text-sm auth-link-cyan">Forgot password?</button>
+            </div>
 
             <button type="submit" disabled={isLoading}
               className="btn-cyan w-full py-3 flex items-center justify-center gap-2">
@@ -258,7 +215,7 @@ export default function AuthScreen() {
                 <div className="w-5 h-5 rounded-full border-2 border-[#0A0F1C] border-t-transparent animate-spin" />
               ) : (
                 <>
-                  {mode === 'login' ? 'Sign In' : 'Create Account'}
+                  Sign In
                   <ArrowRight size={18} />
                 </>
               )}
@@ -266,14 +223,13 @@ export default function AuthScreen() {
           </form>
 
           <p className="text-center mt-6 text-sm auth-switch-text">
-            {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
+            Don't have an account?{' '}
             <button className="font-semibold auth-link-cyan"
-              onClick={() => setMode(mode === 'login' ? 'register' : 'login')}>
-              {mode === 'login' ? 'Sign Up' : 'Sign In'}
+              onClick={() => navigate('/auth/signup')}>
+              Sign Up
             </button>
           </p>
 
-          {/* Quick Demo Login */}
           <div className="mt-8 p-4 rounded-xl auth-demo-box">
             <p className="text-xs font-semibold mb-3 auth-demo-title">⚡ Quick Demo Access</p>
             <div className="grid grid-cols-3 gap-2">
